@@ -14,6 +14,7 @@
 		221B1F0C2221575500975533 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 221B1F0A2221575500975533 /* LaunchScreen.storyboard */; };
 		221B1F0F2221575500975533 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 221B1F0E2221575500975533 /* main.m */; };
 		221B1F192221575500975533 /* TOReachabilityExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 221B1F182221575500975533 /* TOReachabilityExampleTests.m */; };
+		2290F4BD2223FD00008D6AAE /* TOReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 2290F4BC2223FD00008D6AAE /* TOReachability.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,8 @@
 		221B1F142221575500975533 /* TOReachabilityExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TOReachabilityExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		221B1F182221575500975533 /* TOReachabilityExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TOReachabilityExampleTests.m; sourceTree = "<group>"; };
 		221B1F1A2221575500975533 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2290F4BB2223FD00008D6AAE /* TOReachability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TOReachability.h; sourceTree = "<group>"; };
+		2290F4BC2223FD00008D6AAE /* TOReachability.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TOReachability.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +66,7 @@
 		221B1EF32221575400975533 = {
 			isa = PBXGroup;
 			children = (
+				2290F4BA2223FCD3008D6AAE /* TOReachability */,
 				221B1EFE2221575400975533 /* TOReachabilityExample */,
 				221B1F172221575500975533 /* TOReachabilityExampleTests */,
 				221B1EFD2221575400975533 /* Products */,
@@ -101,6 +105,15 @@
 				221B1F1A2221575500975533 /* Info.plist */,
 			);
 			path = TOReachabilityExampleTests;
+			sourceTree = "<group>";
+		};
+		2290F4BA2223FCD3008D6AAE /* TOReachability */ = {
+			isa = PBXGroup;
+			children = (
+				2290F4BB2223FD00008D6AAE /* TOReachability.h */,
+				2290F4BC2223FD00008D6AAE /* TOReachability.m */,
+			);
+			path = TOReachability;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -206,6 +219,7 @@
 				221B1F042221575400975533 /* ViewController.m in Sources */,
 				221B1F0F2221575500975533 /* main.m in Sources */,
 				221B1F012221575400975533 /* AppDelegate.m in Sources */,
+				2290F4BD2223FD00008D6AAE /* TOReachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
