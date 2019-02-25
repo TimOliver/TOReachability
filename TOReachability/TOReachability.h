@@ -39,6 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Reachability)
 @interface TOReachability : NSObject
 
+/** Indiciates when the reacability class has been started and is currently running. */
+@property (nonatomic, readonly) BOOL running NS_SWIFT_NAME(isRunning);
+
 /** When YES, will broadcast whenever the network status changes via Notification Center (Default is NO) */
 @property (nonatomic, assign) BOOL broadcastStatusChangeNotifications;
 
@@ -83,7 +86,11 @@ NS_SWIFT_NAME(Reachability)
  */
 + (instancetype)reachabilityWithIPAddress:(NSString *)ipAddress;
 
-/** */
+/** Start watching for reachability changes */
+- (void)start;
+
+/** Stop watching for reachability changes */
+- (void)stop;
 
 @end
 
