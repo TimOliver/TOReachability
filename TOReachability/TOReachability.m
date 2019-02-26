@@ -21,11 +21,6 @@
 //  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <arpa/inet.h>
-#import <ifaddrs.h>
-#import <netdb.h>
-#import <sys/socket.h>
-#import <netinet/in.h>
-
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <CoreFoundation/CoreFoundation.h>
 
