@@ -48,6 +48,9 @@ NS_SWIFT_NAME(Reachability)
 /** The current status of network reachability */
 @property (nonatomic, readonly) TOReachabilityStatus currentStatus;
 
+/** WWAN on cellular, or WiFi on VPN on demand may be available, but first a connection must be attempted. */
+@property (nonatomic, readonly) BOOL connectionRequired;
+
 /** A block that is called each time the network status changes */
 @property (nonatomic, copy, nullable) void (^statusChangedHandler)(TOReachabilityStatus newStatus,
                                                                     TOReachabilityStatus previousStatus);
@@ -77,17 +80,8 @@ NS_SWIFT_NAME(Reachability)
  */
 + (instancetype)reachabilityWithHostName:(NSString *)hostName;
 
-/**
- Creates a new instance of the reachability class, that can be used
- to check the status of a specific IP address.
- 
- @param ipAddress The hostname to monitor
- @return A new instance of the reachability object
- */
-+ (instancetype)reachabilityWithIPAddress:(NSString *)ipAddress;
-
 /** Start watching for reachability changes */
-- (void)start;
+- (BOOL)start;
 
 /** Stop watching for reachability changes */
 - (void)stop;
