@@ -162,7 +162,7 @@
                         <outlet property="barsLabel" destination="XD8-U2-Mfl" id="MFG-fJ-heL"/>
                         <outlet property="barsView" destination="hek-a5-58M" id="nSs-bG-5bQ"/>
                         <outlet property="disconnectedLabel" destination="c8n-oX-GHD" id="xgh-9h-72G"/>
-                        <outlet property="disconnectedView" destination="c8n-oX-GHD" id="cTA-vb-6zR"/>
+                        <outlet property="disconnectedView" destination="gfO-ST-tja" id="APx-hv-DZt"/>
                         <outlet property="wifiLabel" destination="7lj-13-AHD" id="m5y-hW-UhR"/>
                         <outlet property="wifiView" destination="JeH-Gr-429" id="bVJ-92-PHt"/>
                     </connections>

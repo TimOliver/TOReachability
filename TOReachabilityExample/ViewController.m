@@ -42,8 +42,10 @@
     TOReachabilityStatus status = self.reachability.currentStatus;
 
     if (status == TOReachabilityStatusAvailableViaWiFi) {
-        self.wifiView.tintColor = [UIColor greenColor];
-        self.wifiLabel.textColor = [UIColor greenColor];
+        UIColor *greenColor = [UIColor colorWithRed:0.05f green:0.733f blue:0.0f alpha:1.0f];
+
+        self.wifiView.tintColor = greenColor;
+        self.wifiLabel.textColor = greenColor;
     }
     else {
         self.wifiView.tintColor = [UIColor blackColor];
@@ -51,8 +53,10 @@
     }
 
     if (status == TOReachabilityStatusAvailableViaWWAN) {
-        self.barsView.tintColor = [UIColor yellowColor];
-        self.barsLabel.textColor = [UIColor yellowColor];
+        UIColor *yellowColor = [UIColor colorWithRed:0.925f green:0.76 blue:0.0f alpha:1.0f];
+
+        self.barsView.tintColor = yellowColor;
+        self.barsLabel.textColor = yellowColor;
     }
     else {
         self.barsView.tintColor = [UIColor blackColor];
