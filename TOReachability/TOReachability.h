@@ -48,9 +48,6 @@ NS_SWIFT_NAME(Reachability)
 /** The current status of network reachability */
 @property (nonatomic, readonly) TOReachabilityStatus currentStatus;
 
-/** WWAN on cellular, or WiFi on VPN on demand may be available, but first a connection must be attempted. */
-@property (nonatomic, readonly) BOOL connectionRequired;
-
 /** A block that is called each time the network status changes */
 @property (nonatomic, copy, nullable) void (^statusChangedHandler)(TOReachabilityStatus newStatus,
                                                                     TOReachabilityStatus previousStatus);
