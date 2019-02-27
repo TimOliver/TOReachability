@@ -7,11 +7,9 @@
 //
 
 #import "AppDelegate.h"
-#import "TOReachability.h"
+
 
 @interface AppDelegate ()
-
-@property (nonatomic, strong) TOReachability *reachability;
 
 @end
 
@@ -19,11 +17,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-    self.reachability = [TOReachability reachabilityForInternetConnection];
-    self.reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus, TOReachabilityStatus previousStatus) {
-        NSLog(@"New: %ld Old %ld", (long)newStatus, (long)previousStatus);
-    };
-    [self.reachability start];
+
 
     return YES;
 }
