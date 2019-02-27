@@ -34,6 +34,7 @@ NSString *kTOReachabilityChangedNotification = @"TOReachabilityChangedNotificati
 
 @interface TOReachability ()
 
+@property (nonatomic, assign, readwrite) BOOL running;
 @property (nonatomic, assign, readwrite) TOReachabilityStatus currentStatus;
 @property (nonatomic, assign) SCNetworkReachabilityRef reachabilityRef;
 @property (nonatomic, assign) BOOL wifiOnly;
@@ -120,6 +121,8 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
 - (BOOL)start
 {
+    if (self.running) { return YES; }
+
     SCNetworkReachabilityContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
 
     BOOL result = NO;
@@ -128,6 +131,12 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
             result = YES;
         }
     }
+
+    // Escape if starting the run loop failed
+    if (!result) { return NO; }
+
+    // Ensure we don't start running again
+    self.running = YES;
 
     // For the initial start, trigger the block to create an initial callback
     self.currentStatus = [self fetchNewStatus];
@@ -145,8 +154,9 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
 - (void)stop
 {
-    if (_reachabilityRef == NULL) { return; }
+    if (!self.running) { return; }
     SCNetworkReachabilityUnscheduleFromRunLoop(_reachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+    self.running = NO;
 }
 
 #pragma mark - Reachability State Tracking -
