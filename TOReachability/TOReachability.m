@@ -212,18 +212,4 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
     return status;
 }
 
-#pragma mark - Accessors -
-
-- (BOOL)connectionRequired
-{
-    NSAssert(_reachabilityRef != NULL, @"connectionRequired called with NULL reachabilityRef");
-
-    SCNetworkReachabilityFlags flags;
-    if (SCNetworkReachabilityGetFlags(_reachabilityRef, &flags)) {
-        return (flags & kSCNetworkReachabilityFlagsConnectionRequired);
-    }
-
-    return NO;
-}
-
 @end
