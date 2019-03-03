@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2200B7CA222C18A900E1BE78 /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2200B7C9222C18A900E1BE78 /* CollectionViewCell.m */; };
 		221B1F012221575400975533 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 221B1F002221575400975533 /* AppDelegate.m */; };
 		221B1F042221575400975533 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 221B1F032221575400975533 /* ViewController.m */; };
 		221B1F072221575400975533 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 221B1F052221575400975533 /* Main.storyboard */; };
@@ -28,6 +29,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2200B7C8222C18A900E1BE78 /* CollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewCell.h; sourceTree = "<group>"; };
+		2200B7C9222C18A900E1BE78 /* CollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewCell.m; sourceTree = "<group>"; };
 		221B1EFC2221575400975533 /* TOReachabilityExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TOReachabilityExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		221B1EFF2221575400975533 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		221B1F002221575400975533 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -89,6 +92,8 @@
 				221B1F002221575400975533 /* AppDelegate.m */,
 				221B1F022221575400975533 /* ViewController.h */,
 				221B1F032221575400975533 /* ViewController.m */,
+				2200B7C8222C18A900E1BE78 /* CollectionViewCell.h */,
+				2200B7C9222C18A900E1BE78 /* CollectionViewCell.m */,
 				221B1F052221575400975533 /* Main.storyboard */,
 				221B1F082221575500975533 /* Assets.xcassets */,
 				221B1F0A2221575500975533 /* LaunchScreen.storyboard */,
@@ -217,6 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				221B1F042221575400975533 /* ViewController.m in Sources */,
+				2200B7CA222C18A900E1BE78 /* CollectionViewCell.m in Sources */,
 				221B1F0F2221575500975533 /* main.m in Sources */,
 				221B1F012221575400975533 /* AppDelegate.m in Sources */,
 				2290F4BD2223FD00008D6AAE /* TOReachability.m in Sources */,
