@@ -34,8 +34,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationController.navigationBar.shadowImage = [UIImage new];
-    self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
+    UINavigationBar *bar = self.navigationController.navigationBar;
+    bar.shadowImage = [UIImage new];
+    bar.barTintColor = [UIColor whiteColor];
 
     [self setUpImages];
 
@@ -56,7 +57,7 @@
     UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
 
     if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact) {
-        UIEdgeInsets insets = (UIEdgeInsets){16.0f, 8.0f, 16.0f, 8.0f};
+        UIEdgeInsets insets = (UIEdgeInsets){5.0f, 8.0f, 16.0f, 8.0f};
         layout.sectionInset = insets;
         layout.itemSize = (CGSize){bounds.size.width - (16.0f), 124.0f};
 
