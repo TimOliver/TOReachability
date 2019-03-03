@@ -35,7 +35,7 @@ NSString *kTOReachabilityChangedNotification = @"TOReachabilityChangedNotificati
 @interface TOReachability ()
 
 @property (nonatomic, assign, readwrite) BOOL running;
-@property (nonatomic, assign, readwrite) TOReachabilityStatus currentStatus;
+@property (nonatomic, assign, readwrite) TOReachabilityStatus status;
 @property (nonatomic, assign) SCNetworkReachabilityRef reachabilityRef;
 @property (nonatomic, assign) BOOL wifiOnly;
 
@@ -50,12 +50,12 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
     TOReachability *reachability = (__bridge TOReachability *)info;
 
     // Save the old status for the notification block and grab the new one
-    TOReachabilityStatus previousStatus = reachability.currentStatus;
-    reachability.currentStatus = [reachability fetchNewStatus];
+    TOReachabilityStatus previousStatus = reachability.status;
+    reachability.status = [reachability fetchNewStatus];
 
     // Call the block if it was set
     if (reachability.statusChangedHandler) {
-        reachability.statusChangedHandler(reachability.currentStatus, previousStatus);
+        reachability.statusChangedHandler(reachability.status, previousStatus);
     }
 
     // Since an app could potentially have many reachability objects active at once, only broadcast when
@@ -139,9 +139,9 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
     self.running = YES;
 
     // For the initial start, trigger the block to create an initial callback
-    self.currentStatus = [self fetchNewStatus];
+    self.status = [self fetchNewStatus];
     if (self.statusChangedHandler) {
-        self.statusChangedHandler(self.currentStatus, 0);
+        self.statusChangedHandler(self.status, 0);
     }
 
     // Perform a broadcast of the current status if desired
@@ -172,7 +172,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
     // If the target host is reachable and no connection is required then we'll assume (for now) that you're on Wi-Fi...
     if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0) {
-        status = TOReachabilityStatusAvailableViaWiFi;
+        status = TOReachabilityStatusWiFi;
     }
 
     // and the connection is on-demand (or on-traffic) if the calling application is using the CFSocketStream or higher APIs...
@@ -181,13 +181,13 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
     {
         //... and no [user] intervention is needed...
         if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0) {
-            status = TOReachabilityStatusAvailableViaWiFi;
+            status = TOReachabilityStatusWiFi;
         }
     }
 
     // ... but WWAN connections are OK if the calling application is using the CFNetwork APIs.
     if ((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN) {
-        status = TOReachabilityStatusAvailableViaWWAN;
+        status = TOReachabilityStatusCellular;
     }
 
     return status;
@@ -204,8 +204,8 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
         status = [self reachabilityStatusForFlags:flags];
     }
 
-    // Override WWAN to "Unavailable" when only a Wi-Fi signal is desired
-    if (status == TOReachabilityStatusAvailableViaWWAN && self.wifiOnly) {
+    // Override cellular to "Unavailable" when only a Wi-Fi signal is desired
+    if (status == TOReachabilityStatusCellular && self.wifiOnly) {
         status = TOReachabilityStatusNotAvailable;
     }
 

@@ -25,8 +25,8 @@
 /** The current status of the device reachability */
 typedef NS_ENUM(NSInteger, TOReachabilityStatus) {
     TOReachabilityStatusNotAvailable = 0,
-    TOReachabilityStatusAvailableViaWiFi,
-    TOReachabilityStatusAvailableViaWWAN
+    TOReachabilityStatusWiFi,
+    TOReachabilityStatusCellular
 } NS_SWIFT_NAME(Reachability.Status);
 
 // An NSNotification that will broadcast network status changes
@@ -42,11 +42,11 @@ NS_SWIFT_NAME(Reachability)
 /** Indiciates when the reacability class has been started and is currently running. */
 @property (nonatomic, readonly) BOOL running NS_SWIFT_NAME(isRunning);
 
-/** When YES, will broadcast whenever the network status changes via Notification Center (Default is NO) */
+/** When YES, will broadcast an NSNotification whenever the status changes. Useful for an app-wide global object. (Defualt is NO) */
 @property (nonatomic, assign) BOOL broadcastStatusChangeNotifications;
 
 /** The current status of network reachability */
-@property (nonatomic, readonly) TOReachabilityStatus currentStatus;
+@property (nonatomic, readonly) TOReachabilityStatus status;
 
 /** A block that is called each time the network status changes */
 @property (nonatomic, copy, nullable) void (^statusChangedHandler)(TOReachabilityStatus newStatus,
