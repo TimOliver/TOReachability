@@ -77,10 +77,10 @@
         layout.itemSize = (CGSize){width, 124};
 
         // Inset navigation bar
-        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-        style.alignment = NSTextAlignmentJustified;
-        style.firstLineHeadIndent = padding - view.layoutMargins.left;
-        self.navigationController.navigationBar.largeTitleTextAttributes = @{NSParagraphStyleAttributeName: style};
+        insets = self.navigationController.navigationBar.layoutMargins;
+        insets.left = padding;
+        insets.right = padding;
+        self.navigationController.navigationBar.layoutMargins = insets;
     }
 }
 
