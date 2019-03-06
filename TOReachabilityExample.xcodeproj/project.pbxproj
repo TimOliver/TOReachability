@@ -14,7 +14,9 @@
 		221B1F092221575500975533 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 221B1F082221575500975533 /* Assets.xcassets */; };
 		221B1F0C2221575500975533 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 221B1F0A2221575500975533 /* LaunchScreen.storyboard */; };
 		221B1F0F2221575500975533 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 221B1F0E2221575500975533 /* main.m */; };
-		221B1F192221575500975533 /* TOReachabilityExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 221B1F182221575500975533 /* TOReachabilityExampleTests.m */; };
+		221B1F192221575500975533 /* TOReachabilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 221B1F182221575500975533 /* TOReachabilityTests.m */; };
+		2258DEC422300D8400298AF0 /* TOReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 2290F4BC2223FD00008D6AAE /* TOReachability.m */; };
+		2258DEC7223013BB00298AF0 /* ReachabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2258DEC6223013BB00298AF0 /* ReachabilityTests.swift */; };
 		2290F4BD2223FD00008D6AAE /* TOReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 2290F4BC2223FD00008D6AAE /* TOReachability.m */; };
 /* End PBXBuildFile section */
 
@@ -42,8 +44,10 @@
 		221B1F0D2221575500975533 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		221B1F0E2221575500975533 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		221B1F142221575500975533 /* TOReachabilityExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TOReachabilityExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		221B1F182221575500975533 /* TOReachabilityExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TOReachabilityExampleTests.m; sourceTree = "<group>"; };
+		221B1F182221575500975533 /* TOReachabilityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TOReachabilityTests.m; sourceTree = "<group>"; };
 		221B1F1A2221575500975533 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2258DEC5223013BB00298AF0 /* TOReachabilityTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TOReachabilityTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		2258DEC6223013BB00298AF0 /* ReachabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityTests.swift; sourceTree = "<group>"; };
 		2290F4BB2223FD00008D6AAE /* TOReachability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TOReachability.h; sourceTree = "<group>"; };
 		2290F4BC2223FD00008D6AAE /* TOReachability.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TOReachability.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -71,7 +75,7 @@
 			children = (
 				2290F4BA2223FCD3008D6AAE /* TOReachability */,
 				221B1EFE2221575400975533 /* TOReachabilityExample */,
-				221B1F172221575500975533 /* TOReachabilityExampleTests */,
+				221B1F172221575500975533 /* TOReachabilityTests */,
 				221B1EFD2221575400975533 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,13 +107,15 @@
 			path = TOReachabilityExample;
 			sourceTree = "<group>";
 		};
-		221B1F172221575500975533 /* TOReachabilityExampleTests */ = {
+		221B1F172221575500975533 /* TOReachabilityTests */ = {
 			isa = PBXGroup;
 			children = (
-				221B1F182221575500975533 /* TOReachabilityExampleTests.m */,
+				2258DEC6223013BB00298AF0 /* ReachabilityTests.swift */,
+				221B1F182221575500975533 /* TOReachabilityTests.m */,
+				2258DEC5223013BB00298AF0 /* TOReachabilityTests-Bridging-Header.h */,
 				221B1F1A2221575500975533 /* Info.plist */,
 			);
-			path = TOReachabilityExampleTests;
+			path = TOReachabilityTests;
 			sourceTree = "<group>";
 		};
 		2290F4BA2223FCD3008D6AAE /* TOReachability */ = {
@@ -173,6 +179,7 @@
 					};
 					221B1F132221575500975533 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
 						TestTargetID = 221B1EFB2221575400975533;
 					};
 				};
@@ -233,7 +240,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				221B1F192221575500975533 /* TOReachabilityExampleTests.m in Sources */,
+				2258DEC422300D8400298AF0 /* TOReachability.m in Sources */,
+				2258DEC7223013BB00298AF0 /* ReachabilityTests.swift in Sources */,
+				221B1F192221575500975533 /* TOReachabilityTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,16 +426,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6LF3GMKZAB;
-				INFOPLIST_FILE = TOReachabilityExampleTests/Info.plist;
+				INFOPLIST_FILE = TOReachabilityTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = dev.tim.TOReachabilityExampleTests;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.tim.TOReachabilityTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "TOReachabilityTests/TOReachabilityTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TOReachabilityExample.app/TOReachabilityExample";
 			};
@@ -436,16 +449,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6LF3GMKZAB;
-				INFOPLIST_FILE = TOReachabilityExampleTests/Info.plist;
+				INFOPLIST_FILE = TOReachabilityTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = dev.tim.TOReachabilityExampleTests;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.tim.TOReachabilityTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "TOReachabilityTests/TOReachabilityTests-Bridging-Header.h";
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TOReachabilityExample.app/TOReachabilityExample";
 			};

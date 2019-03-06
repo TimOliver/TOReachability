@@ -30,7 +30,7 @@ typedef NS_ENUM(NSInteger, TOReachabilityStatus) {
 } NS_SWIFT_NAME(Reachability.Status);
 
 // An NSNotification that will broadcast network status changes
-extern NSString *kTOReachabilityChangedNotification;
+extern NSString *TOReachabilityStatusChangedNotification NS_SWIFT_NAME(Reachability.StatusChangedNotification);
 
 @class TOReachability;
 
@@ -58,7 +58,7 @@ NS_SWIFT_NAME(Reachability)
  
  @return A new instance of the reachability object
  */
-+ (instancetype)reachabilityForInternetConnection;
++ (instancetype)reachabilityForInternetConnection NS_SWIFT_NAME(forInternetConnection());
 
 /**
  Creates a new instance of the reachability class, that can be used
@@ -66,7 +66,7 @@ NS_SWIFT_NAME(Reachability)
  
  @return A new instance of the reachability object
  */
-+ (instancetype)reachabilityForWifiConnection;
++ (instancetype)reachabilityForWifiConnection NS_SWIFT_NAME(forWifiConnection());
 
 /**
  Creates a new instance of the reachability class, that can be used
@@ -75,7 +75,7 @@ NS_SWIFT_NAME(Reachability)
  @param hostName The hostname to monitor
  @return A new instance of the reachability object
  */
-+ (instancetype)reachabilityWithHostName:(NSString *)hostName;
++ (instancetype)reachabilityWithHostName:(NSString *)hostName NS_SWIFT_NAME(init(hostName:));
 
 /** Start watching for reachability changes */
 - (BOOL)start;

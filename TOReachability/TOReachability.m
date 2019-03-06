@@ -28,7 +28,7 @@
 
 // -------------------------------------------------------------
 
-NSString *kTOReachabilityChangedNotification = @"TOReachabilityChangedNotification";
+NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChangedNotification";
 
 // -------------------------------------------------------------
 
@@ -61,7 +61,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
     // Since an app could potentially have many reachability objects active at once, only broadcast when
     // the object has been explicitly configured to do so
     if (reachability.broadcastStatusChangeNotifications) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTOReachabilityChangedNotification object:reachability];
+        [[NSNotificationCenter defaultCenter] postNotificationName:TOReachabilityStatusChangedNotification object:reachability];
     }
 }
 
@@ -146,7 +146,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
     // Perform a broadcast of the current status if desired
     if (self.broadcastStatusChangeNotifications) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTOReachabilityChangedNotification object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:TOReachabilityStatusChangedNotification object:self];
     }
 
     return result;
