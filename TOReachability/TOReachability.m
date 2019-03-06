@@ -39,7 +39,7 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 @property (nonatomic, assign) SCNetworkReachabilityRef reachabilityRef;
 @property (nonatomic, assign) BOOL wifiOnly;
 
-- (TOReachabilityStatus)fetchNewStatus;
+- (TOReachabilityStatus)fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags;
 
 @end
 
@@ -51,7 +51,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
     // Save the old status for the notification block and grab the new one
     TOReachabilityStatus previousStatus = reachability.status;
-    reachability.status = [reachability fetchNewStatus];
+    reachability.status = [reachability fetchNewStatusWithFlags:flags];
 
     // Call the block if it was set
     if (reachability.statusChangedHandler) {
@@ -139,7 +139,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     self.running = YES;
 
     // For the initial start, trigger the block to create an initial callback
-    self.status = [self fetchNewStatus];
+    self.status = [self fetchNewStatusWithFlags:0];
     if (self.statusChangedHandler) {
         self.statusChangedHandler(self.status, 0);
     }
@@ -193,16 +193,19 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return status;
 }
 
-- (TOReachabilityStatus)fetchNewStatus
+    - (TOReachabilityStatus)fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags
 {
     NSAssert(_reachabilityRef != NULL, @"currentNetworkStatus called with NULL SCNetworkReachabilityRef");
 
     TOReachabilityStatus status = TOReachabilityStatusNotAvailable;
 
-    SCNetworkReachabilityFlags flags;
-    if (SCNetworkReachabilityGetFlags(_reachabilityRef, &flags)) {
-        status = [self reachabilityStatusForFlags:flags];
+    // If provided flags were 0, try and refresh them
+    if (flags == 0) {
+        SCNetworkReachabilityGetFlags(_reachabilityRef, &flags);
     }
+
+    // Convert the provided flags into a practical status value
+    status = [self reachabilityStatusForFlags:flags];
 
     // Override cellular to "Unavailable" when only a Wi-Fi signal is desired
     if (status == TOReachabilityStatusCellular && self.wifiOnly) {
@@ -210,6 +213,13 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     }
 
     return status;
+}
+
+#pragma mark - Internal Testing -
+- (void)_triggerCellularCallback
+{
+    SCNetworkReachabilityFlags flags = kSCNetworkReachabilityFlagsReachable | kSCNetworkReachabilityFlagsIsWWAN;
+    TOReachabilityCallback(_reachabilityRef, flags, (__bridge void *)(self));
 }
 
 @end

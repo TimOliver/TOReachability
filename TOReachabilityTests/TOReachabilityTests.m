@@ -7,10 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <SystemConfiguration/SystemConfiguration.h>
 #import "TOReachability.h"
-
-static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
 
 @interface TOReachabilityTests : XCTestCase
 
@@ -53,6 +50,46 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     [self waitForExpectations:@[expectation] timeout:10.0f];
 }
 
+- (void)testCellularConnection
+{
+    TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
+    XCTAssertNotNil(reachability);
 
+    XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability Dedicated Stable Cellular"];
+
+    reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus,
+                                          TOReachabilityStatus previousStatus)
+    {
+        if (newStatus == TOReachabilityStatusCellular) { [expection fulfill]; }
+    };
+    [reachability start];
+
+    // Force trigger the internal callback method, simulating cellular
+    [reachability performSelector:NSSelectorFromString(@"_triggerCellularCallback") withObject:nil afterDelay:0];
+
+    [self waitForExpectations:@[expection] timeout:1.0f];
+}
+
+- (void)testWiFiOnlyConnection
+{
+    TOReachability *reachability = [TOReachability reachabilityForWifiConnection];
+    XCTAssertNotNil(reachability);
+
+    // This test will be a failure if triggering a simulated cellular signal changes the status to cellular
+    XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability Dedicated Only Cellular"];
+    expection.inverted = YES;
+
+    reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus,
+                                          TOReachabilityStatus previousStatus)
+    {
+        if (newStatus == TOReachabilityStatusCellular) { [expection fulfill]; }
+    };
+    [reachability start];
+
+    // Force trigger the internal callback method, simulating cellular
+    [reachability performSelector:NSSelectorFromString(@"_triggerCellularCallback") withObject:nil afterDelay:0];
+
+    [self waitForExpectations:@[expection] timeout:1.0f];
+}
 
 @end
