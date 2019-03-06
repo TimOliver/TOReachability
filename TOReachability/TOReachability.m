@@ -45,7 +45,7 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 
 // -------------------------------------------------------------
 
-static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info)
+static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info)
 {
     TOReachability *reachability = (__bridge TOReachability *)info;
 
@@ -126,7 +126,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
     SCNetworkReachabilityContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
 
     BOOL result = NO;
-    if (SCNetworkReachabilitySetCallback(_reachabilityRef, ReachabilityCallback, &context)) {
+    if (SCNetworkReachabilitySetCallback(_reachabilityRef, TOReachabilityCallback, &context)) {
         if (SCNetworkReachabilityScheduleWithRunLoop(_reachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode)) {
             result = YES;
         }

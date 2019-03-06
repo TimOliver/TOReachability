@@ -7,7 +7,10 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <SystemConfiguration/SystemConfiguration.h>
 #import "TOReachability.h"
+
+static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info);
 
 @interface TOReachabilityTests : XCTestCase
 
