@@ -15,6 +15,7 @@
 		221B1F0C2221575500975533 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 221B1F0A2221575500975533 /* LaunchScreen.storyboard */; };
 		221B1F0F2221575500975533 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 221B1F0E2221575500975533 /* main.m */; };
 		221B1F192221575500975533 /* TOReachabilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 221B1F182221575500975533 /* TOReachabilityTests.m */; };
+		2250F87F2236C8150074BD3A /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 2250F87E2236C8150074BD3A /* CHANGELOG.md */; };
 		2258DEC422300D8400298AF0 /* TOReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 2290F4BC2223FD00008D6AAE /* TOReachability.m */; };
 		2258DEC7223013BB00298AF0 /* ReachabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2258DEC6223013BB00298AF0 /* ReachabilityTests.swift */; };
 		2290F4BD2223FD00008D6AAE /* TOReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 2290F4BC2223FD00008D6AAE /* TOReachability.m */; };
@@ -46,6 +47,7 @@
 		221B1F142221575500975533 /* TOReachabilityExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TOReachabilityExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		221B1F182221575500975533 /* TOReachabilityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TOReachabilityTests.m; sourceTree = "<group>"; };
 		221B1F1A2221575500975533 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2250F87E2236C8150074BD3A /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		2258DEC5223013BB00298AF0 /* TOReachabilityTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TOReachabilityTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		2258DEC6223013BB00298AF0 /* ReachabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityTests.swift; sourceTree = "<group>"; };
 		2290F4BB2223FD00008D6AAE /* TOReachability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TOReachability.h; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 				221B1EFE2221575400975533 /* TOReachabilityExample */,
 				221B1F172221575500975533 /* TOReachabilityTests */,
 				221B1EFD2221575400975533 /* Products */,
+				2250F87E2236C8150074BD3A /* CHANGELOG.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -211,6 +214,7 @@
 				221B1F0C2221575500975533 /* LaunchScreen.storyboard in Resources */,
 				221B1F092221575500975533 /* Assets.xcassets in Resources */,
 				221B1F072221575400975533 /* Main.storyboard in Resources */,
+				2250F87F2236C8150074BD3A /* CHANGELOG.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
