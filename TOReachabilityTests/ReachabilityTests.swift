@@ -31,13 +31,9 @@ class ReachabilityTests: XCTestCase {
         reachability.broadcastsStatusChangeNotifications = true
         XCTAssertNotNil(reachability)
 
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) {
-            reachability.start()
-        }
-
-        // Because `waitForExpectations:` blocks the main thread, we can't simply set up the observer and call
-        // `start` afterwards
         let expectation = XCTNSNotificationExpectation(name: NSNotification.Name(rawValue: Reachability.StatusChangedNotification), object: reachability)
-        wait(for: [expectation], timeout: 10.0)
+        reachability.start()
+
+        wait(for: [expectation], timeout: 1.0)
     }
 }

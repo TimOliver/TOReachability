@@ -9,7 +9,9 @@
 #import <XCTest/XCTest.h>
 #import "TOReachability.h"
 
-@interface TOReachabilityTests : XCTestCase
+@interface TOReachabilityTests : XCTestCase <TOReachabilityDelegate>
+
+@property (nonatomic, strong) XCTestExpectation *delegateExpectation;
 
 @end
 
@@ -38,14 +40,10 @@
     reachability.broadcastsStatusChangeNotifications = YES;
     XCTAssertNotNil(reachability);
 
-    // Because `waitForExpectations:` blocks the main thread, we can't simply set up the observer and call
-    // `start` afterwards
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [reachability start];
-    });
-
     XCTNSNotificationExpectation *expectation = [[XCTNSNotificationExpectation alloc] initWithName:TOReachabilityStatusChangedNotification object:reachability];
-    [self waitForExpectations:@[expectation] timeout:10.0f];
+    [reachability start];
+
+    [self waitForExpectations:@[expectation] timeout:1.0f];
 }
 
 - (void)testCellularConnection
@@ -84,6 +82,24 @@
     [reachability performSelector:NSSelectorFromString(@"_triggerCellularCallback") withObject:nil afterDelay:0];
 
     [self waitForExpectations:@[expection] timeout:1.0f];
+}
+
+- (void)testDelegate
+{
+    TOReachability *reachability = [TOReachability reachabilityForWifiConnection];
+    XCTAssertNotNil(reachability);
+
+    self.delegateExpectation = [[XCTestExpectation alloc] initWithDescription:@"Delegate successfully called"];
+
+    reachability.delegate = self;
+    [reachability start];
+
+    [self waitForExpectations:@[self.delegateExpectation] timeout:1.0f];
+}
+
+- (void)reachability:(TOReachability *)reachability didChangeStatusTo:(TOReachabilityStatus)newStatus
+{
+    [self.delegateExpectation fulfill];
 }
 
 @end
