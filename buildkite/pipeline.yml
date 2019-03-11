@@ -1,0 +1,3 @@
+steps:
+  - label: Run Test Fastlane
+    command: 'bundle install && fastlane test'
