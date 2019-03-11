@@ -35,7 +35,7 @@
 - (void)testNotificationBroadcast
 {
     TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
-    reachability.broadcastStatusChangeNotifications = YES;
+    reachability.broadcastsStatusChangeNotifications = YES;
     XCTAssertNotNil(reachability);
 
     // Because `waitForExpectations:` blocks the main thread, we can't simply set up the observer and call

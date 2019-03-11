@@ -49,10 +49,13 @@ NS_SWIFT_NAME(Reachability)
 @property (nonatomic, readonly) BOOL running NS_SWIFT_NAME(isRunning);
 
 /** When YES, will broadcast an NSNotification whenever the status changes. Useful for an app-wide global object. (Defualt is NO) */
-@property (nonatomic, assign) BOOL broadcastStatusChangeNotifications;
+@property (nonatomic, assign) BOOL broadcastsStatusChangeNotifications;
 
 /** The current status of network reachability */
 @property (nonatomic, readonly) TOReachabilityStatus status;
+
+/** A delegate object that will be informed of status changes. */
+@property (nonatomic, weak) id<TOReachabilityDelegate> delegate;
 
 /** A block that is called each time the network status changes */
 @property (nonatomic, copy, nullable) void (^statusChangedHandler)(TOReachabilityStatus newStatus);

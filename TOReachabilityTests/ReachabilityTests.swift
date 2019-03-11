@@ -28,7 +28,7 @@ class ReachabilityTests: XCTestCase {
 
     func testNotificationBroadcast() {
         let reachability = Reachability.forInternetConnection()
-        reachability.broadcastStatusChangeNotifications = true
+        reachability.broadcastsStatusChangeNotifications = true
         XCTAssertNotNil(reachability)
 
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) {

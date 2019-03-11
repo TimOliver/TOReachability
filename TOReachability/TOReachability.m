@@ -40,6 +40,7 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 @property (nonatomic, assign) BOOL wifiOnly;
 
 - (TOReachabilityStatus)fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags;
+- (void)broadcastStatusChange;
 
 @end
 
@@ -49,19 +50,11 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 {
     TOReachability *reachability = (__bridge TOReachability *)info;
 
-    // Fetch the new status based on the flags
+    // Update the current status of the reachability object to which this function was called
     reachability.status = [reachability fetchNewStatusWithFlags:flags];
 
-    // Call the block if one is available
-    if (reachability.statusChangedHandler) {
-        reachability.statusChangedHandler(reachability.status);
-    }
-
-    // Since an app could potentially have many reachability objects active at once, only broadcast when
-    // the object has been explicitly configured to do so
-    if (reachability.broadcastStatusChangeNotifications) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:TOReachabilityStatusChangedNotification object:reachability];
-    }
+    // Trigger the reachability object to broadcast that this status change occurred.
+    [reachability broadcastStatusChange];
 }
 
 // -------------------------------------------------------------
@@ -116,6 +109,26 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     }
 }
 
+#pragma mark - Broadcast Status Updates -
+- (void)broadcastStatusChange
+{
+    // Call the delegate if one is available
+    if ([self.delegate respondsToSelector:@selector(reachability:didChangeStatusTo:)]) {
+        [self.delegate reachability:self didChangeStatusTo:self.status];
+    }
+
+    // Call the block if one is available
+    if (self.statusChangedHandler) {
+        self.statusChangedHandler(self.status);
+    }
+
+    // Since an app could potentially have many reachability objects active at once, only broadcast when
+    // the object has been explicitly configured to do so
+    if (self.broadcastsStatusChangeNotifications) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:TOReachabilityStatusChangedNotification object:self];
+    }
+}
+
 #pragma mark - Reachability Lifecycle -
 
 - (BOOL)start
@@ -137,16 +150,9 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     // Ensure we don't start running again
     self.running = YES;
 
-    // For the initial start, trigger the block to create an initial callback
+    // For the initial start, check the current network state and broadcast that
     self.status = [self fetchNewStatusWithFlags:0];
-    if (self.statusChangedHandler) {
-        self.statusChangedHandler(self.status);
-    }
-
-    // Perform a broadcast of the current status if desired
-    if (self.broadcastStatusChangeNotifications) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:TOReachabilityStatusChangedNotification object:self];
-    }
+    [self broadcastStatusChange];
 
     return result;
 }
