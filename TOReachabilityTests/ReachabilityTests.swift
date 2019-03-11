@@ -16,7 +16,7 @@ class ReachabilityTests: XCTestCase {
         let reachability = Reachability.forInternetConnection()
         XCTAssertNotNil(reachability)
 
-        reachability.statusChangedHandler = {newStatus, oldStatus in
+        reachability.statusChangedHandler = {newStatus in
             expectation.fulfill()
         }
         reachability.start()

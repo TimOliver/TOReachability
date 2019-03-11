@@ -34,6 +34,12 @@ extern NSString *TOReachabilityStatusChangedNotification NS_SWIFT_NAME(Reachabil
 
 @class TOReachability;
 
+@protocol TOReachabilityDelegate <NSObject>
+
+- (void)reachability:(TOReachability *)reachability didChangeStatusTo:(TOReachabilityStatus)newStatus NS_SWIFT_NAME(reachability(_:didChangeTo:));
+
+@end
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(Reachability)
@@ -49,8 +55,7 @@ NS_SWIFT_NAME(Reachability)
 @property (nonatomic, readonly) TOReachabilityStatus status;
 
 /** A block that is called each time the network status changes */
-@property (nonatomic, copy, nullable) void (^statusChangedHandler)(TOReachabilityStatus newStatus,
-                                                                    TOReachabilityStatus previousStatus);
+@property (nonatomic, copy, nullable) void (^statusChangedHandler)(TOReachabilityStatus newStatus);
 
 /**
  Creates a new instance of the reachability class, that can be used

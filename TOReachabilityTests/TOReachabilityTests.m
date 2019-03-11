@@ -22,9 +22,7 @@
     TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
     XCTAssertNotNil(reachability);
 
-    reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus,
-                                          TOReachabilityStatus previousStatus)
-    {
+    reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
         [expection fulfill];
     };
     [reachability start];
@@ -57,9 +55,7 @@
 
     XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability Dedicated Stable Cellular"];
 
-    reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus,
-                                          TOReachabilityStatus previousStatus)
-    {
+    reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
         if (newStatus == TOReachabilityStatusCellular) { [expection fulfill]; }
     };
     [reachability start];
@@ -79,9 +75,7 @@
     XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability Dedicated Only Cellular"];
     expection.inverted = YES;
 
-    reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus,
-                                          TOReachabilityStatus previousStatus)
-    {
+    reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
         if (newStatus == TOReachabilityStatusCellular) { [expection fulfill]; }
     };
     [reachability start];

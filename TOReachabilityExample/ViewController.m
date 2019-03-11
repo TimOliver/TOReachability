@@ -43,7 +43,7 @@
     __weak typeof(self) weakSelf = self;
 
     self.reachability = [TOReachability reachabilityForInternetConnection];
-    self.reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus, TOReachabilityStatus previousStatus) {
+    self.reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
         [weakSelf updateCells];
     };
     [self.reachability start];

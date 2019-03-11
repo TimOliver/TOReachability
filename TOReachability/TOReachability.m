@@ -49,13 +49,12 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 {
     TOReachability *reachability = (__bridge TOReachability *)info;
 
-    // Save the old status for the notification block and grab the new one
-    TOReachabilityStatus previousStatus = reachability.status;
+    // Fetch the new status based on the flags
     reachability.status = [reachability fetchNewStatusWithFlags:flags];
 
-    // Call the block if it was set
+    // Call the block if one is available
     if (reachability.statusChangedHandler) {
-        reachability.statusChangedHandler(reachability.status, previousStatus);
+        reachability.statusChangedHandler(reachability.status);
     }
 
     // Since an app could potentially have many reachability objects active at once, only broadcast when
@@ -141,7 +140,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     // For the initial start, trigger the block to create an initial callback
     self.status = [self fetchNewStatusWithFlags:0];
     if (self.statusChangedHandler) {
-        self.statusChangedHandler(self.status, 0);
+        self.statusChangedHandler(self.status);
     }
 
     // Perform a broadcast of the current status if desired
