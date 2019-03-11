@@ -1,4 +1,4 @@
-x.y.z Release notes (yyyy-MM-dd)
+x.y.z Release Notes (yyyy-MM-dd)
 =============================================================
 
 ### Enhancements

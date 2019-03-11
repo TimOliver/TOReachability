@@ -22,6 +22,12 @@
 
 #import <Foundation/Foundation.h>
 
+//! Project version number for TOReachability.
+FOUNDATION_EXPORT double TOReachabilityVersionNumber;
+
+//! Project version string for TOReachability.
+FOUNDATION_EXPORT const unsigned char TOReachabilityVersionString[];
+
 /** The current status of the device reachability */
 typedef NS_ENUM(NSInteger, TOReachabilityStatus) {
     TOReachabilityStatusNotAvailable = 0,
