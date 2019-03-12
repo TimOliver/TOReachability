@@ -1,8 +1,7 @@
-update_fastlane
-
 default_platform(:ios)
 
 desc "Runs the unit tests to ensure the build is working"
 lane :test do
+  update_fastlane
   scan(scheme: "TOReachabilityTests", devices: ["iPhone SE"], clean: true)
 end
