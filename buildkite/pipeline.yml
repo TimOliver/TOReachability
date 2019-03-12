@@ -1,5 +1,5 @@
 steps:
-  - label: ':Bundler: Install Dependencies'
+  - label: ':bundler: Install Dependencies'
     command: 'bundle install'
     
   - wait
