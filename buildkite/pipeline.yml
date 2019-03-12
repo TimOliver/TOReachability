@@ -1,6 +1,6 @@
 steps:
-  - label: ':bundler: Install Dependencies'
-    command: 'bundle install'
+  - label: ':bundler: Update Dependencies'
+    command: 'gem update --system && gem install bundler && bundle install'
     
   - wait
   
