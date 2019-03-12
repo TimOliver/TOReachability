@@ -5,4 +5,4 @@ steps:
   - wait
   
   - label: ':fastlane: Run Tests'
-    command: 'fastlane test'
+    command: 'bundle exec fastlane test'
