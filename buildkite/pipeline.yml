@@ -1,8 +1,3 @@
-steps:
-  - label: ':bundler: Update Dependencies'
-    command: 'bundle install'
-    
-  - wait
-  
+steps:  
   - label: ':fastlane: Run Tests'
-    command: 'bundle exec fastlane test'
+    command: 'bundle install && bundle exec fastlane test'
