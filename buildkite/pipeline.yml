@@ -1,3 +1,8 @@
 steps:
-  - label: Run Test Fastlane
-    command: 'bundle install && fastlane test'
+  - label: ':Bundler: Install Dependencies'
+    command: 'bundle install'
+    
+  - wait
+  
+  - label: ':fastlane: Run Tests'
+    command: 'fastlane test'
