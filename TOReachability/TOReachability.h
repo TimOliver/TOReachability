@@ -94,3 +94,9 @@ NS_SWIFT_NAME(Reachability)
 @end
 
 NS_ASSUME_NONNULL_END
+
+//! Project version number for TOReachability.	
+FOUNDATION_EXPORT double TOReachabilityVersionNumber;	
+
+//! Project version string for TOReachability.	
+FOUNDATION_EXPORT const unsigned char TOReachabilityVersionString[];	
