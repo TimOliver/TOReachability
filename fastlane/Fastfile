@@ -56,7 +56,7 @@ lane :release do
     UI.error(ex)
   end
 
-  # Commit and push, but pass through if they fail
+  # Commit and push the version bump
   begin 
     reset_git_repo(force: true)
     sh("git pull")
