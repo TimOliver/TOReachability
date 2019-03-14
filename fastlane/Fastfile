@@ -52,10 +52,10 @@ lane :release do
   # Commit both version bumps
   push_to_git_remote(
     remote: "origin", 
-    local_branch: "HEAD", 
+    local_branch: "master", 
     remote_branch: "master",
     force: true,
-    tags: true
+    tags: false
   )
 
   # Publish to CocoaPods trunk
