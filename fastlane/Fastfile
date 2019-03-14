@@ -50,7 +50,13 @@ lane :release do
   git_commit(path: "TOReachabilityFramework/Info.plist", message: "Bumped Framework Version to v" + latest_version)
 
   # Commit both version bumps
-  push_to_git_remote
+  push_to_git_remote(
+    remote: "origin", 
+    local_branch: "HEAD", 
+    remote_branch: "master",
+    force: true,
+    tags: true
+  )
 
   # Publish to CocoaPods trunk
   pod_push
