@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'TOReachability'
-  s.version  = '0.0.1'
+  s.version  = '0.1.0'
   s.license  =  { :type => 'MIT', :file => 'LICENSE' }
   s.summary  = 'A lightweight, unit-tested class to detect network changes on iOS'
   s.homepage = 'https://github.com/TimOliver/TOReachability'
