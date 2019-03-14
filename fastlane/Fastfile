@@ -16,8 +16,28 @@ lane :release do
   end
 
   # Verify the tag conforms to semantic versioning
-  if !(last_tag =~ /[vV]?\d{1,3}\.\d{1,3}\.\d{1,3}/)
+  latest_version = last_tag.scan(/[vV]?(\d{1,3}\.\d{1,3}\.\d{1,3})/).last.first
+  if !latest_version
     UI.success "--- Latest tag doesn't appear to be a new version. Ignoring. 😅 ---"
     next
   end
+
+  # Update Podspec file and commit
+  version_bump_podspec(path: "TOReachability.podspec", version_number: latest_version)
+  git_commit(path: "TOReachability.podspec", message: "Bumped Podspec to v" + latest_version)
+
+  # Update framework version and commit
+  set_info_plist_value(path: "TOReachabilityFramework/Info.plist", key: "CFBundleShortVersionString", value: latest_version)
+  git_commit(path: "TOReachabilityFramework/Info.plist", message: "Bumped Framework Version to v" + latest_version)
+
+  # Commit both version bumps
+  # push_to_git_remote
+
+  # Publish to CocoaPods trunk
+  # pod_push
+
+  # Finally, create a GitHub release
+  changelog_contents = File.read("CHANGELOG.md")
+  print(changelog_contents)
+
 end
