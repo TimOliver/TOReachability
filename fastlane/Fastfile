@@ -9,6 +9,7 @@ desc "Cuts a new release and distributes it on CocoaPods and Carthage"
 lane :release do
 
   # Fetch the latest tag that would have just been added
+  sh('git fetch --tags')
   last_tag = last_git_tag
   if !last_tag
     UI.user_error! "--- ERROR: Was unable to locate any git tags. ---"
