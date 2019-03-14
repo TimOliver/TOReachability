@@ -63,6 +63,7 @@ lane :release do
   end
 
   # Publish to CocoaPods trunk
-  pod_push
+  pod_push(use_bundle_exec: true,
+            allow_warnings: true)
 
 end
