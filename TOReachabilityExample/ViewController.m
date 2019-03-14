@@ -61,7 +61,9 @@
         layout.sectionInset = insets;
         layout.itemSize = (CGSize){bounds.size.width - (16.0f), 124.0f};
 
-        self.navigationController.navigationBar.largeTitleTextAttributes = nil;
+        if (@available(iOS 11.0, *)) {
+            self.navigationController.navigationBar.largeTitleTextAttributes = nil;
+        }
     }
     else {
         UIView *view = self.navigationController.view;

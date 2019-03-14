@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:TOReachabilityExample.xcodeproj">
+      location = "self:/Users/TiM/Projects/TOReachability/TOReachabilityExample.xcodeproj">
    </FileRef>
 </Workspace>
