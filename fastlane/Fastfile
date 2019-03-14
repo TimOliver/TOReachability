@@ -8,11 +8,6 @@ end
 desc "Cuts a new release and distributes it on CocoaPods and Carthage"
 lane :release do
 
-  # Force master
-  sh("git checkout master")
-  reset_git_repo(force: true)
-  sh("git pull")
-
   # Fetch the latest tag that would have just been added
   sh('git fetch --tags')
   last_tag = last_git_tag
@@ -46,13 +41,23 @@ lane :release do
                       tag_name: latest_version,
                       description: release_notes.first)
 
+  # Force master
+  sh("git checkout master")
+
   # Update Podspec and Framework files
   version_bump_podspec(path: "TOReachability.podspec", version_number: latest_version)
   set_info_plist_value(path: "TOReachabilityFramework/Info.plist", key: "CFBundleShortVersionString", value: latest_version)
 
+  # Publish to CocoaPods trunk
+  pod_push(use_bundle_exec: true,
+            allow_warnings: true)
+
   # Commit and push, but pass through if they fail
   begin 
-    sh("git commit -m \"Bumped Podspec to v" + latest_version + "\"")
+    reset_git_repo(force: true)
+    sh("git pull")
+
+    sh("git commit -m \"Bumped version to v" + latest_version + "\"")
     push_to_git_remote(
       remote: "origin", 
       local_branch: "master", 
@@ -61,9 +66,5 @@ lane :release do
   rescue => ex
     UI.error(ex)
   end
-
-  # Publish to CocoaPods trunk
-  pod_push(use_bundle_exec: true,
-            allow_warnings: true)
 
 end
