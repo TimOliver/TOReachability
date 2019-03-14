@@ -10,6 +10,8 @@ lane :release do
 
   # Force master
   sh('git checkout master')
+  reset_git_repo
+  sh('git pull')
 
   # Fetch the latest tag that would have just been added
   sh('git fetch --tags')
