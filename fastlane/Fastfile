@@ -46,13 +46,10 @@ lane :release do
                       tag_name: latest_version,
                       description: release_notes.first)
 
-  # Update Podspec file and commit
+  # Update Podspec and Framework files and commit
   version_bump_podspec(path: "TOReachability.podspec", version_number: latest_version)
-  git_commit(path: "TOReachability.podspec", message: "Bumped Podspec to v" + latest_version)
-
-  # Update framework version and commit
   set_info_plist_value(path: "TOReachabilityFramework/Info.plist", key: "CFBundleShortVersionString", value: latest_version)
-  git_commit(path: "TOReachabilityFramework/Info.plist", message: "Bumped Framework Version to v" + latest_version)
+  sh("git commit -m \"Bumped Podspec to v" + latest_version + "\"")
 
   # Commit both version bumps
   push_to_git_remote(
