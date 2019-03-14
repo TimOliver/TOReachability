@@ -71,4 +71,6 @@ lane :release do
     UI.error(ex)
   end
 
+  next
+
 end
