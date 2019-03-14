@@ -8,6 +8,9 @@ end
 desc "Cuts a new release and distributes it on CocoaPods and Carthage"
 lane :release do
 
+  # Force master
+  sg('git checkout master')
+
   # Fetch the latest tag that would have just been added
   sh('git fetch --tags')
   last_tag = last_git_tag
