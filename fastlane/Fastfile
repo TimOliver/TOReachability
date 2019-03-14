@@ -22,6 +22,8 @@ lane :release do
     next
   end
 
+  UI.success "--- Found latest tag: " + latest_version + " ---"
+
   # Load the Release Notes from file, and throw an error if they weren't updated
   changelog_contents = File.read("../CHANGELOG.md")
   v = latest_version.split(".")
