@@ -9,7 +9,7 @@ desc "Cuts a new release and distributes it on CocoaPods and Carthage"
 lane :release do
 
   # Force master
-  sg('git checkout master')
+  sh('git checkout master')
 
   # Fetch the latest tag that would have just been added
   sh('git fetch --tags')
