@@ -49,8 +49,12 @@ lane :release do
   set_info_plist_value(path: "TOReachabilityFramework/Info.plist", key: "CFBundleShortVersionString", value: latest_version)
 
   # Publish to CocoaPods trunk
-  pod_push(use_bundle_exec: true,
-            allow_warnings: true)
+  begin 
+    pod_push(use_bundle_exec: true,
+               allow_warnings: true)
+  rescue => ex
+    UI.error(ex)
+  end
 
   # Commit and push, but pass through if they fail
   begin 
