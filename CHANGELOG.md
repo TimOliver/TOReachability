@@ -9,3 +9,8 @@ x.y.z Release Notes (yyyy-MM-dd)
 
 ### Compatibility
 * None.
+
+0.1.0 Release Notes (2018-03-15)
+=============================================================
+
+* Initial Release! 🎉
