@@ -57,20 +57,18 @@ lane :release do
   end
 
   # Commit and push the version bump
-  begin 
-    reset_git_repo(force: true)
-    sh("git pull")
+  #begin 
+  #  reset_git_repo(force: true)
+  #  sh("git pull")
 
-    sh("git commit -m \"Bumped version to v" + latest_version + "\"")
-    push_to_git_remote(
-      remote: "origin", 
-      local_branch: "master", 
-      remote_branch: "master"
-    )
-  rescue => ex
-    UI.error(ex)
-  end
-
-  next
+  #  sh("git commit -m \"Bumped version to v" + latest_version + "\"")
+  #  push_to_git_remote(
+  #    remote: "origin", 
+  #    local_branch: "master", 
+  #    remote_branch: "master"
+  #  )
+  #rescue => ex
+  #  UI.error(ex)
+  #end
 
 end
