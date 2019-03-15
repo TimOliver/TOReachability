@@ -41,20 +41,18 @@ lane :release do
                       tag_name: latest_version,
                       description: release_notes.first)
 
-  # Force master
-  sh("git checkout master")
-
   # Update Podspec and Framework files
   version_bump_podspec(path: "TOReachability.podspec", version_number: latest_version)
   set_info_plist_value(path: "TOReachabilityFramework/Info.plist", key: "CFBundleShortVersionString", value: latest_version)
 
   # Publish to CocoaPods trunk
   begin 
-    pod_push(use_bundle_exec: true,
-               allow_warnings: true)
+    pod_push(use_bundle_exec: true, allow_warnings: true)
   rescue => ex
     UI.error(ex)
   end
+
+  commit_file(repo_name: "TimOliver/TOReachability", file_path: "TOReachability.podspec", message: "Wee")
 
   # Commit and push the version bump
   #begin 
@@ -71,4 +69,24 @@ lane :release do
   #  UI.error(ex)
   #end
 
+end
+
+desc "Using the GitHub Web API, commit the local contents of a file to master"
+lane :commit_file do |options|
+  repo_name = options[:repo_name]
+  file_path = options[:file_path]
+  message = options[:commit_message]
+
+  # Fetch the file so we can extract the sha
+  GithubApiAction.run(
+    api_token: ENV["GITHUB_TOKEN"],
+    path: "/repos/#{repo_name}/contents/#{file_path}",
+    error_handlers: {
+      '*' => proc do |result|
+        UI.error("GitHub responded with #{result[:status]}:#{result[:body]}")
+      end
+    }
+  ) do |result|
+    UI.message("JSON returned: #{result[:json]}")
+  end
 end
