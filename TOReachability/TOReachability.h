@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Reachability)
 @interface TOReachability : NSObject
 
-/** Indiciates when the reacability class has been started and is currently running. */
+/** Indiciates when the reachability class has been started and is currently running. */
 @property (nonatomic, readonly) BOOL running NS_SWIFT_NAME(isRunning);
 
 /** When YES, will broadcast an NSNotification whenever the status changes. Useful for an app-wide global object. (Defualt is NO) */
