@@ -1,3 +1,6 @@
+env:
+  TEST_SCHEME: "TOReachabilityTests"
+
 steps:  
   - label: ':fastlane: Run Tests'
     command: 'bundle install && bundle exec fastlane test'
