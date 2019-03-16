@@ -87,7 +87,7 @@ lane :commit_file do |options|
   content = Base64.encode64(File.read("../" + file_path))
   author = {"name": "XD-CI", email: ENV["AUTHOR_EMAIL"]}
 
-  print(content)
+  print("File contnet" +content)
 
   # Upload the local copy of that file back up
   result = github_api(
