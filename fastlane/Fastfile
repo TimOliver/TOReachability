@@ -1,8 +1,10 @@
+require 'base64'
+
 default_platform(:ios)
 
 desc "Runs the unit tests to ensure the build is working"
 lane :test do
-  scan(scheme: "TOReachabilityTests", devices: ["iPhone SE"], clean: true)
+  scan(scheme: ENV["TEST_SCHEME"], devices: ["iPhone SE"], clean: true)
 end
 
 desc "Cuts a new release and distributes it on CocoaPods and Carthage"
@@ -35,15 +37,15 @@ lane :release do
   end
 
   # Publish the Release on GitHub
-  set_github_release(repository_name: "TimOliver/TOReachability", 
+  set_github_release(repository_name: ENV["REPO_PATH"], 
                       api_token: ENV["GITHUB_TOKEN"],
                       name: "v"+latest_version,
                       tag_name: latest_version,
                       description: release_notes.first)
 
   # Update Podspec and Framework files
-  version_bump_podspec(path: "TOReachability.podspec", version_number: latest_version)
-  set_info_plist_value(path: "TOReachabilityFramework/Info.plist", key: "CFBundleShortVersionString", value: latest_version)
+  version_bump_podspec(path: ENV["PODSPEC_PATH"], version_number: latest_version)
+  set_info_plist_value(path: ENV["FRAMEWORK_PLIST_PATH"], key: "CFBundleShortVersionString", value: latest_version)
 
   # Publish to CocoaPods trunk
   begin 
@@ -52,22 +54,9 @@ lane :release do
     UI.error(ex)
   end
 
-  commit_file(repo_name: "TimOliver/TOReachability", file_path: "TOReachability.podspec", message: "Wee")
-
-  # Commit and push the version bump
-  #begin 
-  #  reset_git_repo(force: true)
-  #  sh("git pull")
-
-  #  sh("git commit -m \"Bumped version to v" + latest_version + "\"")
-  #  push_to_git_remote(
-  #    remote: "origin", 
-  #    local_branch: "master", 
-  #    remote_branch: "master"
-  #  )
-  #rescue => ex
-  #  UI.error(ex)
-  #end
+  # Commit and push the version bumps
+  commit_file(repo_name: ENV["REPO_PATH"], file_path: ENV["PODSPEC_PATH"], commit_message: "Bumped Podspec Version to v" + latest_version)
+  commit_file(repo_name: ENV["REPO_PATH"], file_path: ENV["FRAMEWORK_PLIST_PATH"], commit_message: "Bumped Framework Version to v" + latest_version)
 
 end
 
@@ -78,7 +67,7 @@ lane :commit_file do |options|
   message = options[:commit_message]
 
   # Fetch the file so we can extract the sha
-  GithubApiAction.run(
+  result = github_api(
     api_token: ENV["GITHUB_TOKEN"],
     path: "/repos/#{repo_name}/contents/#{file_path}",
     error_handlers: {
@@ -86,7 +75,28 @@ lane :commit_file do |options|
         UI.error("GitHub responded with #{result[:status]}:#{result[:body]}")
       end
     }
-  ) do |result|
-    UI.message("JSON returned: #{result[:json]}")
+  )
+
+  # Check the sha value was returned
+  sha = result[:json]["sha"]
+  if !sha 
+    UI.error("Was unable to find sha value for " + file_path)
   end
+
+  # Encode the content as base 64
+  content = Base64.encode64(File.read("../" + file_path))
+  author = {"name": "XD-CI", email: ENV["AUTHOR_EMAIL"]}
+
+  # Upload the local copy of that file back up
+  result = github_api(
+    api_token: ENV["GITHUB_TOKEN"],
+    http_method: "PUT",
+    path: "/repos/#{repo_name}/contents/#{file_path}",
+    body: {"message": message, "sha": sha, "content": content, "author": author},
+    error_handlers: {
+      '*' => proc do |result|
+        UI.error("GitHub responded with #{result[:status]}:#{result[:body]}")
+      end
+    }
+  )
 end
