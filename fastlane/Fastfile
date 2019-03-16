@@ -1,5 +1,3 @@
-require 'base64'
-
 default_platform(:ios)
 
 desc "Runs the unit tests to ensure the build is working"
