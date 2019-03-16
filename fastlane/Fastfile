@@ -90,14 +90,11 @@ lane :commit_file do |options|
     api_token: ENV["GITHUB_TOKEN"],
     http_method: "PUT",
     path: "/repos/#{repo_name}/contents/#{file_path}",
-    body: {"message": message, "sha": sha, "content": content, "author": author},
+    body: {"message": message, "sha": sha, "content": content, "author": author, "committer": author},
     error_handlers: {
       '*' => proc do |result|
         UI.error("GitHub responded with #{result[:status]}:#{result[:body]}")
       end
     }
   )
-
-  print("/repos/#{repo_name}/contents/#{file_path}")
-  print(result)
 end
