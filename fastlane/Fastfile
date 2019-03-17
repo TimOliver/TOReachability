@@ -78,7 +78,7 @@ lane :release do
     api_token: ENV["GITHUB_TOKEN"],
     http_method: "PUT",
     path: "/repos/#{repo_name}/contents/git/tags",
-    body: {"message": tag_message, "tag": latest_version, "object": commit_sha, "content": "type": "commit", "tagger": tagger},
+    body: {"message": tag_message, "tag": latest_version, "object": commit_sha, "type": "commit", "tagger": tagger},
     error_handlers: {
       '*' => proc do |result|
         UI.error("GitHub responded with #{result[:status]}:#{result[:body]}")
