@@ -3,4 +3,4 @@ env:
 
 steps:  
   - label: ':fastlane: Run Tests'
-    command: 'bundle install && bundle exec fastlane test'
+    command: 'bundle update && bundle exec fastlane test'
