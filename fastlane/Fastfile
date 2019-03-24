@@ -1,7 +1,7 @@
 default_platform(:ios)
 
 before_all do
-  update_fastlane
+  update_fastlane(nightly: true)
 end
 
 desc "Runs the unit tests to ensure the build is working"
