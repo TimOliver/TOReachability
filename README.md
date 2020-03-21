@@ -2,7 +2,7 @@
 
 # TOReachability
 	
-[![Build Status](https://badge.buildkite.com/16dbb7e654c24edd77dff09019e0f515b98810d7eec6cbfa68.svg?branch=master)](https://buildkite.com/xd-ci/toreachability-run-ci)
+[![CI](https://github.com/TimOliver/TOReachability/workflows/CI/badge.svg)](https://github.com/TimOliver/TOReachability/actions?query=workflow%3ACI)
 [![Version](https://img.shields.io/cocoapods/v/TOReachability.svg?style=flat)](http://cocoadocs.org/docsets/TOReachability)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/TimOliver/TOReachability/master/LICENSE)
