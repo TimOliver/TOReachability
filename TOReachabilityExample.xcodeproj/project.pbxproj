@@ -96,6 +96,7 @@
 		22269A2D2A0F770900104EC0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		22269A322A0F770A00104EC0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		22269A342A0F770A00104EC0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		22269A422A0F89FF00104EC0 /* TOReachability.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = TOReachability.podspec; sourceTree = "<group>"; };
 		2250F87E2236C8150074BD3A /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		2250F8922236D2920074BD3A /* TOReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOReachability.h; sourceTree = "<group>"; };
 		2250F8932236D2920074BD3A /* TOReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOReachability.m; sourceTree = "<group>"; };
@@ -153,10 +154,11 @@
 				22269A252A0F770900104EC0 /* TOReachabilityExample (tvOS) */,
 				2250F8972236D2A70074BD3A /* TOReachabilityFramework */,
 				221B1F172221575500975533 /* TOReachabilityTests */,
+				22A3D6CE2A0F5BE4006ADBCA /* Frameworks */,
 				221B1EFD2221575400975533 /* Products */,
+				22269A422A0F89FF00104EC0 /* TOReachability.podspec */,
 				2250F87E2236C8150074BD3A /* CHANGELOG.md */,
 				22A3D6CB2A0F5734006ADBCA /* README.md */,
-				22A3D6CE2A0F5BE4006ADBCA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -671,6 +673,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6LF3GMKZAB;
 				INFOPLIST_FILE = TOReachabilityTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -678,11 +681,14 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.tim.TOReachabilityTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "TOReachabilityTests/TOReachabilityTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TOReachabilityExample.app/TOReachabilityExample";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TOReachabilityExample (iOS).app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TOReachabilityExample (iOS)";
 			};
 			name = Debug;
 		};
@@ -694,6 +700,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6LF3GMKZAB;
 				INFOPLIST_FILE = TOReachabilityTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -701,10 +708,13 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.tim.TOReachabilityTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "TOReachabilityTests/TOReachabilityTests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TOReachabilityExample.app/TOReachabilityExample";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TOReachabilityExample (iOS).app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TOReachabilityExample (iOS)";
 			};
 			name = Release;
 		};
@@ -718,7 +728,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6LF3GMKZAB;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -726,12 +736,12 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "co.timoliver.TOReachabilityExample--tvOS-";
+				PRODUCT_BUNDLE_IDENTIFIER = "co.timoliver.TOReachabilityExample-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 16.4;
+				TVOS_DEPLOYMENT_TARGET = 13.0;
 			};
 			name = Debug;
 		};
@@ -745,7 +755,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6LF3GMKZAB;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -753,12 +763,12 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "co.timoliver.TOReachabilityExample--tvOS-";
+				PRODUCT_BUNDLE_IDENTIFIER = "co.timoliver.TOReachabilityExample-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 16.4;
+				TVOS_DEPLOYMENT_TARGET = 13.0;
 			};
 			name = Release;
 		};

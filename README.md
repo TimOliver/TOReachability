@@ -25,9 +25,11 @@ While `TOReachability` only currently includes the most basic of functionality, 
 * For cases where only Wi-Fi is needed, an option may be set to ignore cellular status changes.
 * Fully-bridged and tested to work in Swift.
 
-## Requirements
+## Minimum Requirements
 * iOS 11.0 
-* Xcode 14.0 or higher
+* tvOS 11.0 
+* macOS 10.13
+* Xcode 14.0
 
 ## Installation Instructions
 

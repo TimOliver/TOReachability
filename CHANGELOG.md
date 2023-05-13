@@ -13,11 +13,15 @@ x.y.z Release Notes (yyyy-MM-dd)
 1.0.0 Release Notes (2023-05-13)
 =============================================================
 
+### Enhancements
+* For Mac and Apple TV use cases, `TOReachabilityStatus` has been reworded from `WiFi` to `Available` to make more sense on devices that may also use Ethernet for their network connections.
+
 ### Fixed
-* Nullability warnings.
+* Fixed nullability annotation warnings.
 
 ### Compatibility
 * Bumped minimum version to iOS 11.0.
+* Added support for tvOS 11.0 and macOS 10.13.
 
 * Initial Release! 🎉
 
