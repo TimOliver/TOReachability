@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "221B1EFB2221575400975533"
-               BuildableName = "TOReachabilityExample.app"
-               BlueprintName = "TOReachabilityExample"
+               BuildableName = "TOReachabilityExample (iOS).app"
+               BlueprintName = "TOReachabilityExample (iOS)"
                ReferencedContainer = "container:TOReachabilityExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,8 +32,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "221B1EFB2221575400975533"
-            BuildableName = "TOReachabilityExample.app"
-            BlueprintName = "TOReachabilityExample"
+            BuildableName = "TOReachabilityExample (iOS).app"
+            BlueprintName = "TOReachabilityExample (iOS)"
             ReferencedContainer = "container:TOReachabilityExample.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -65,8 +65,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "221B1EFB2221575400975533"
-            BuildableName = "TOReachabilityExample.app"
-            BlueprintName = "TOReachabilityExample"
+            BuildableName = "TOReachabilityExample (iOS).app"
+            BlueprintName = "TOReachabilityExample (iOS)"
             ReferencedContainer = "container:TOReachabilityExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -82,8 +82,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "221B1EFB2221575400975533"
-            BuildableName = "TOReachabilityExample.app"
-            BlueprintName = "TOReachabilityExample"
+            BuildableName = "TOReachabilityExample (iOS).app"
+            BlueprintName = "TOReachabilityExample (iOS)"
             ReferencedContainer = "container:TOReachabilityExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -46,22 +46,28 @@
             bounds.size.width - (16.0f), 124.0f
         };
 
+#if TARGET_OS_IOS
         if (@available(iOS 11.0, *)) {
             self.navigationController.navigationBar.largeTitleTextAttributes = nil;
         }
-    } else { // On iPad, center the cells in the middle of the screen
-        UIView *view = self.navigationController.view;
-        CGFloat width = 650;
+#endif
+    } else { // On iPad/tvOS, center the cells in the middle of the screen
+        BOOL isTV = self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomTV;
+        UIView *view = self.view;
+        CGFloat width = isTV ? 1000 : 650;
         CGFloat padding = (view.frame.size.width - (width)) * 0.5f;
 
         UIEdgeInsets insets = layout.sectionInset;
         insets.top = 10.0f;
+        if (isTV) {
+            insets.top = ((view.frame.size.height) - ((250 * 3.0f) + (layout.minimumLineSpacing * 2.0f))) * 0.5f;
+        }
         insets.left = padding;
         insets.right = padding;
         layout.sectionInset = insets;
 
         layout.itemSize = (CGSize) {
-            width, 124
+            width, (isTV ? 250 : 125)
         };
 
         // Inset the navigation bar so the large title also aligns with the cells
@@ -104,7 +110,7 @@
     switch (indexPath.row) {
         case 0:
             highlighted = (self.reachability.status == TOReachabilityStatusAvailable);
-#if TARGET_OS_MACCATALYST || TARGET_OS_TVOS
+#if TARGET_OS_MACCATALYST
             cell.titleLabel.text = @"Online";
 #else
             cell.titleLabel.text = @"WiFi";

@@ -15,6 +15,14 @@
 		221B1F0C2221575500975533 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 221B1F0A2221575500975533 /* LaunchScreen.storyboard */; };
 		221B1F0F2221575500975533 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 221B1F0E2221575500975533 /* main.m */; };
 		221B1F192221575500975533 /* TOReachabilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 221B1F182221575500975533 /* TOReachabilityTests.m */; };
+		22269A2E2A0F770900104EC0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22269A2C2A0F770900104EC0 /* Main.storyboard */; };
+		22269A332A0F770A00104EC0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22269A312A0F770A00104EC0 /* LaunchScreen.storyboard */; };
+		22269A352A0F770A00104EC0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 22269A342A0F770A00104EC0 /* main.m */; };
+		22269A392A0F778700104EC0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 221B1F002221575400975533 /* AppDelegate.m */; };
+		22269A3A2A0F778700104EC0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 221B1F032221575400975533 /* ViewController.m */; };
+		22269A3B2A0F778700104EC0 /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2200B7C9222C18A900E1BE78 /* CollectionViewCell.m */; };
+		22269A3D2A0F779100104EC0 /* TOReachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A3D6C02A0F44C1006ADBCA /* TOReachability.framework */; };
+		22269A3E2A0F779100104EC0 /* TOReachability.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22A3D6C02A0F44C1006ADBCA /* TOReachability.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2250F87F2236C8150074BD3A /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 2250F87E2236C8150074BD3A /* CHANGELOG.md */; };
 		2250F8952236D2920074BD3A /* TOReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 2250F8932236D2920074BD3A /* TOReachability.m */; };
 		2258DEC7223013BB00298AF0 /* ReachabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2258DEC6223013BB00298AF0 /* ReachabilityTests.swift */; };
@@ -44,6 +52,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		22269A3F2A0F779200104EC0 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				22269A3E2A0F779100104EC0 /* TOReachability.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2250F8912236D1BE0074BD3A /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -60,7 +79,7 @@
 /* Begin PBXFileReference section */
 		2200B7C8222C18A900E1BE78 /* CollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewCell.h; sourceTree = "<group>"; };
 		2200B7C9222C18A900E1BE78 /* CollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewCell.m; sourceTree = "<group>"; };
-		221B1EFC2221575400975533 /* TOReachabilityExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TOReachabilityExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		221B1EFC2221575400975533 /* TOReachabilityExample (iOS).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TOReachabilityExample (iOS).app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		221B1EFF2221575400975533 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		221B1F002221575400975533 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		221B1F022221575400975533 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -73,6 +92,10 @@
 		221B1F142221575500975533 /* TOReachabilityExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TOReachabilityExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		221B1F182221575500975533 /* TOReachabilityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TOReachabilityTests.m; sourceTree = "<group>"; };
 		221B1F1A2221575500975533 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		22269A242A0F770900104EC0 /* TOReachabilityExample (tvOS).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TOReachabilityExample (tvOS).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		22269A2D2A0F770900104EC0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		22269A322A0F770A00104EC0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		22269A342A0F770A00104EC0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2250F87E2236C8150074BD3A /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		2250F8922236D2920074BD3A /* TOReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TOReachability.h; sourceTree = "<group>"; };
 		2250F8932236D2920074BD3A /* TOReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TOReachability.m; sourceTree = "<group>"; };
@@ -102,6 +125,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		22269A212A0F770900104EC0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22269A3D2A0F779100104EC0 /* TOReachability.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		22A3D6BD2A0F44C1006ADBCA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -118,7 +149,8 @@
 			isa = PBXGroup;
 			children = (
 				2290F4BA2223FCD3008D6AAE /* TOReachability */,
-				221B1EFE2221575400975533 /* TOReachabilityExample */,
+				221B1EFE2221575400975533 /* TOReachabilityExample (iOS) */,
+				22269A252A0F770900104EC0 /* TOReachabilityExample (tvOS) */,
 				2250F8972236D2A70074BD3A /* TOReachabilityFramework */,
 				221B1F172221575500975533 /* TOReachabilityTests */,
 				221B1EFD2221575400975533 /* Products */,
@@ -131,14 +163,15 @@
 		221B1EFD2221575400975533 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				221B1EFC2221575400975533 /* TOReachabilityExample.app */,
+				221B1EFC2221575400975533 /* TOReachabilityExample (iOS).app */,
 				221B1F142221575500975533 /* TOReachabilityExampleTests.xctest */,
 				22A3D6C02A0F44C1006ADBCA /* TOReachability.framework */,
+				22269A242A0F770900104EC0 /* TOReachabilityExample (tvOS).app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		221B1EFE2221575400975533 /* TOReachabilityExample */ = {
+		221B1EFE2221575400975533 /* TOReachabilityExample (iOS) */ = {
 			isa = PBXGroup;
 			children = (
 				22A3D6D32A0F7041006ADBCA /* TOReachabilityExample.entitlements */,
@@ -154,7 +187,7 @@
 				221B1F0D2221575500975533 /* Info.plist */,
 				221B1F0E2221575500975533 /* main.m */,
 			);
-			path = TOReachabilityExample;
+			path = "TOReachabilityExample (iOS)";
 			sourceTree = "<group>";
 		};
 		221B1F172221575500975533 /* TOReachabilityTests */ = {
@@ -166,6 +199,16 @@
 				221B1F1A2221575500975533 /* Info.plist */,
 			);
 			path = TOReachabilityTests;
+			sourceTree = "<group>";
+		};
+		22269A252A0F770900104EC0 /* TOReachabilityExample (tvOS) */ = {
+			isa = PBXGroup;
+			children = (
+				22269A2C2A0F770900104EC0 /* Main.storyboard */,
+				22269A312A0F770A00104EC0 /* LaunchScreen.storyboard */,
+				22269A342A0F770A00104EC0 /* main.m */,
+			);
+			path = "TOReachabilityExample (tvOS)";
 			sourceTree = "<group>";
 		};
 		2250F8972236D2A70074BD3A /* TOReachabilityFramework */ = {
@@ -208,9 +251,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		221B1EFB2221575400975533 /* TOReachabilityExample */ = {
+		221B1EFB2221575400975533 /* TOReachabilityExample (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 221B1F1D2221575500975533 /* Build configuration list for PBXNativeTarget "TOReachabilityExample" */;
+			buildConfigurationList = 221B1F1D2221575500975533 /* Build configuration list for PBXNativeTarget "TOReachabilityExample (iOS)" */;
 			buildPhases = (
 				221B1EF82221575400975533 /* Sources */,
 				221B1EF92221575400975533 /* Frameworks */,
@@ -222,9 +265,9 @@
 			dependencies = (
 				22A3D6C52A0F44C1006ADBCA /* PBXTargetDependency */,
 			);
-			name = TOReachabilityExample;
+			name = "TOReachabilityExample (iOS)";
 			productName = TOReachabilityExample;
-			productReference = 221B1EFC2221575400975533 /* TOReachabilityExample.app */;
+			productReference = 221B1EFC2221575400975533 /* TOReachabilityExample (iOS).app */;
 			productType = "com.apple.product-type.application";
 		};
 		221B1F132221575500975533 /* TOReachabilityExampleTests */ = {
@@ -244,6 +287,24 @@
 			productName = TOReachabilityExampleTests;
 			productReference = 221B1F142221575500975533 /* TOReachabilityExampleTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		22269A232A0F770900104EC0 /* TOReachabilityExample (tvOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 22269A382A0F770A00104EC0 /* Build configuration list for PBXNativeTarget "TOReachabilityExample (tvOS)" */;
+			buildPhases = (
+				22269A202A0F770900104EC0 /* Sources */,
+				22269A212A0F770900104EC0 /* Frameworks */,
+				22269A222A0F770900104EC0 /* Resources */,
+				22269A3F2A0F779200104EC0 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "TOReachabilityExample (tvOS)";
+			productName = "TOReachabilityExample (tvOS)";
+			productReference = 22269A242A0F770900104EC0 /* TOReachabilityExample (tvOS).app */;
+			productType = "com.apple.product-type.application";
 		};
 		22A3D6BF2A0F44C1006ADBCA /* TOReachability */ = {
 			isa = PBXNativeTarget;
@@ -281,6 +342,9 @@
 						LastSwiftMigration = "";
 						TestTargetID = 221B1EFB2221575400975533;
 					};
+					22269A232A0F770900104EC0 = {
+						CreatedOnToolsVersion = 14.3;
+					};
 					22A3D6BF2A0F44C1006ADBCA = {
 						CreatedOnToolsVersion = 14.3;
 					};
@@ -299,7 +363,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				221B1EFB2221575400975533 /* TOReachabilityExample */,
+				221B1EFB2221575400975533 /* TOReachabilityExample (iOS) */,
+				22269A232A0F770900104EC0 /* TOReachabilityExample (tvOS) */,
 				221B1F132221575500975533 /* TOReachabilityExampleTests */,
 				22A3D6BF2A0F44C1006ADBCA /* TOReachability */,
 			);
@@ -322,6 +387,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		22269A222A0F770900104EC0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22269A332A0F770A00104EC0 /* LaunchScreen.storyboard in Resources */,
+				22269A2E2A0F770900104EC0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +430,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		22269A202A0F770900104EC0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22269A392A0F778700104EC0 /* AppDelegate.m in Sources */,
+				22269A3A2A0F778700104EC0 /* ViewController.m in Sources */,
+				22269A3B2A0F778700104EC0 /* CollectionViewCell.m in Sources */,
+				22269A352A0F770A00104EC0 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		22A3D6BC2A0F44C1006ADBCA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -369,7 +454,7 @@
 /* Begin PBXTargetDependency section */
 		221B1F162221575500975533 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 221B1EFB2221575400975533 /* TOReachabilityExample */;
+			target = 221B1EFB2221575400975533 /* TOReachabilityExample (iOS) */;
 			targetProxy = 221B1F152221575500975533 /* PBXContainerItemProxy */;
 		};
 		22A3D6C52A0F44C1006ADBCA /* PBXTargetDependency */ = {
@@ -392,6 +477,22 @@
 			isa = PBXVariantGroup;
 			children = (
 				221B1F0B2221575500975533 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		22269A2C2A0F770900104EC0 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				22269A2D2A0F770900104EC0 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		22269A312A0F770A00104EC0 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				22269A322A0F770A00104EC0 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -607,6 +708,60 @@
 			};
 			name = Release;
 		};
+		22269A362A0F770A00104EC0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6LF3GMKZAB;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "co.timoliver.TOReachabilityExample--tvOS-";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 16.4;
+			};
+			name = Debug;
+		};
+		22269A372A0F770A00104EC0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6LF3GMKZAB;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "co.timoliver.TOReachabilityExample--tvOS-";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 16.4;
+			};
+			name = Release;
+		};
 		22A3D6C92A0F44C1006ADBCA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -716,7 +871,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		221B1F1D2221575500975533 /* Build configuration list for PBXNativeTarget "TOReachabilityExample" */ = {
+		221B1F1D2221575500975533 /* Build configuration list for PBXNativeTarget "TOReachabilityExample (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				221B1F1E2221575500975533 /* Debug */,
@@ -730,6 +885,15 @@
 			buildConfigurations = (
 				221B1F212221575500975533 /* Debug */,
 				221B1F222221575500975533 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		22269A382A0F770A00104EC0 /* Build configuration list for PBXNativeTarget "TOReachabilityExample (tvOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				22269A362A0F770A00104EC0 /* Debug */,
+				22269A372A0F770A00104EC0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
