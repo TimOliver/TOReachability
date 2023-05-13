@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2250F8AC2236D4070074BD3A"
+               BlueprintIdentifier = "22A3D6BF2A0F44C1006ADBCA"
                BuildableName = "TOReachability.framework"
                BlueprintName = "TOReachability"
                ReferencedContainer = "container:TOReachabilityExample.xcodeproj">
@@ -43,7 +43,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2250F8AC2236D4070074BD3A"
+            BlueprintIdentifier = "22A3D6BF2A0F44C1006ADBCA"
             BuildableName = "TOReachability.framework"
             BlueprintName = "TOReachability"
             ReferencedContainer = "container:TOReachabilityExample.xcodeproj">
@@ -59,7 +59,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2250F8AC2236D4070074BD3A"
+            BlueprintIdentifier = "22A3D6BF2A0F44C1006ADBCA"
             BuildableName = "TOReachability.framework"
             BlueprintName = "TOReachability"
             ReferencedContainer = "container:TOReachabilityExample.xcodeproj">
