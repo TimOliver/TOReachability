@@ -42,15 +42,18 @@
 
     // On compact size classes (eg iPhone), have the cells stretch edge-to-edge
     if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact) {
-        UIEdgeInsets insets = (UIEdgeInsets){5.0f, 8.0f, 16.0f, 8.0f};
+        UIEdgeInsets insets = (UIEdgeInsets) {
+            5.0f, 8.0f, 16.0f, 8.0f
+        };
         layout.sectionInset = insets;
-        layout.itemSize = (CGSize){bounds.size.width - (16.0f), 124.0f};
+        layout.itemSize = (CGSize) {
+            bounds.size.width - (16.0f), 124.0f
+        };
 
         if (@available(iOS 11.0, *)) {
             self.navigationController.navigationBar.largeTitleTextAttributes = nil;
         }
-    }
-    else { // On iPad, center the cells in the middle of the screen
+    } else { // On iPad, center the cells in the middle of the screen
         UIView *view = self.navigationController.view;
         CGFloat width = 650;
         CGFloat padding = (view.frame.size.width - (width)) * 0.5f;
@@ -61,7 +64,9 @@
         insets.right = padding;
         layout.sectionInset = insets;
 
-        layout.itemSize = (CGSize){width, 124};
+        layout.itemSize = (CGSize) {
+            width, 124
+        };
 
         // Inset the navigation bar so the large title also aligns with the cells
         insets = self.navigationController.navigationBar.layoutMargins;
@@ -86,6 +91,7 @@
     UIImageSymbolConfiguration *configuration = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
 
     BOOL highlighted = NO;
+
     switch (indexPath.row) {
         case 0:
             highlighted = (self.reachability.status == TOReachabilityStatusWiFi);
@@ -94,6 +100,7 @@
             cell.highlightedView.alpha = highlighted ? 1.0f : 0.0f;
             cell.highlightedView.backgroundColor = UIColor.systemGreenColor;
             break;
+
         case 1:
             highlighted = (self.reachability.status == TOReachabilityStatusCellular);
             cell.titleLabel.text = @"Cellular";
@@ -101,6 +108,7 @@
             cell.highlightedView.alpha = highlighted ? 1.0f : 0.0f;
             cell.highlightedView.backgroundColor = UIColor.systemYellowColor;
             break;
+
         case 2:
             highlighted = (self.reachability.status == TOReachabilityStatusNotAvailable);
             cell.titleLabel.text = @"Offline";
@@ -108,6 +116,7 @@
             cell.highlightedView.alpha = highlighted ? 1.0f : 0.0f;
             cell.highlightedView.backgroundColor = UIColor.systemRedColor;
             break;
+
         default:
             break;
     }
@@ -120,6 +129,7 @@
 - (void)updateTintingWithCell:(CollectionViewCell *)cell highlighted:(BOOL)highlighted {
     BOOL isDarkMode = self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark;
     UIColor *unhilightedColor = isDarkMode ? UIColor.whiteColor : UIColor.blackColor;
+
     cell.titleLabel.textColor = highlighted ? UIColor.whiteColor : unhilightedColor;
     cell.imageView.tintColor = highlighted ? UIColor.whiteColor : unhilightedColor;
 }
@@ -129,12 +139,17 @@
     void (^animationBlock)(void) = ^{
         for (NSInteger i = 0; i < 3; i++) {
             CollectionViewCell *cell = (CollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
-            if (cell == nil) { continue; }
+
+            if (cell == nil) {
+                continue;
+            }
 
             BOOL highlighted = NO;
             switch (i) {
                 case 0: highlighted = (self.reachability.status == TOReachabilityStatusWiFi); break;
+
                 case 1: highlighted = (self.reachability.status == TOReachabilityStatusCellular); break;
+
                 case 2: highlighted = (self.reachability.status == TOReachabilityStatusNotAvailable); break;
             }
 

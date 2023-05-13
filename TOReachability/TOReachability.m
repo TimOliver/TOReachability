@@ -46,14 +46,9 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 
 // -------------------------------------------------------------
 
-static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info)
-{
+static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
     TOReachability *reachability = (__bridge TOReachability *)info;
-
-    // Update the current status of the reachability object to which this function was called
     reachability.status = [reachability fetchNewStatusWithFlags:flags];
-
-    // Trigger the reachability object to broadcast that this status change occurred.
     [reachability broadcastStatusChange];
 }
 
@@ -76,13 +71,13 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
     TOReachability *reachability = [[TOReachability alloc] init];
     reachability.reachabilityRef = reachabilityRef;
-
     return reachability;
 }
 
 + (instancetype)reachabilityForWifiConnection {
     // Create a zero address reachability object and configure it to only care about wifi
     TOReachability *reachability = [[self class] reachabilityForInternetConnection];
+
     reachability.wifiOnly = YES;
     return reachability;
 }
@@ -94,12 +89,12 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
     TOReachability *reachability = [[TOReachability alloc] init];
     reachability.reachabilityRef = reachabilityRef;
-
     return reachability;
 }
 
 - (void)dealloc {
     [self stop];
+
     if (_reachabilityRef != NULL) {
         CFRelease(_reachabilityRef);
     }
@@ -130,9 +125,12 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 - (BOOL)start {
     if (self.running) { return YES; }
 
-    SCNetworkReachabilityContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
+    SCNetworkReachabilityContext context = {
+        0, (__bridge void *)(self), NULL, NULL, NULL
+    };
 
     BOOL result = NO;
+
     if (SCNetworkReachabilitySetCallback(_reachabilityRef, TOReachabilityCallback, &context)) {
         if (SCNetworkReachabilityScheduleWithRunLoop(_reachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode)) {
             result = YES;
@@ -154,6 +152,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 - (void)stop {
     if (!self.running) { return; }
+
     SCNetworkReachabilityUnscheduleFromRunLoop(_reachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     self.running = NO;
 }
@@ -175,8 +174,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
     // and the connection is on-demand (or on-traffic) if the calling application is using the CFSocketStream or higher APIs...
     if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand) != 0) ||
-         (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0))
-    {
+         (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0)) {
         //... and no [user] intervention is needed...
         if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0) {
             status = TOReachabilityStatusWiFi;
@@ -216,6 +214,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 - (void)_triggerCellularCallback {
     SCNetworkReachabilityFlags flags = kSCNetworkReachabilityFlagsReachable | kSCNetworkReachabilityFlagsIsWWAN;
+
     TOReachabilityCallback(_reachabilityRef, flags, (__bridge void *)(self));
 }
 
