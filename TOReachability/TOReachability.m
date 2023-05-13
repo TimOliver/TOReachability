@@ -63,8 +63,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 #pragma mark - Object Creation -
 
-+ (instancetype)reachabilityForInternetConnection
-{
++ (instancetype)reachabilityForInternetConnection {
     struct sockaddr_in zeroAddress;
     bzero(&zeroAddress, sizeof(zeroAddress));
     zeroAddress.sin_len = sizeof(zeroAddress);
@@ -81,16 +80,14 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return reachability;
 }
 
-+ (instancetype)reachabilityForWifiConnection
-{
++ (instancetype)reachabilityForWifiConnection {
     // Create a zero address reachability object and configure it to only care about wifi
     TOReachability *reachability = [[self class] reachabilityForInternetConnection];
     reachability.wifiOnly = YES;
     return reachability;
 }
 
-+ (instancetype)reachabilityWithHostName:(NSString *)hostName
-{
++ (instancetype)reachabilityWithHostName:(NSString *)hostName {
     // Create a reachability object wuth the provided host name
     SCNetworkReachabilityRef reachabilityRef = SCNetworkReachabilityCreateWithName(NULL, hostName.UTF8String);
     if (reachabilityRef == NULL) { return nil; }
@@ -101,8 +98,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return reachability;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [self stop];
     if (_reachabilityRef != NULL) {
         CFRelease(_reachabilityRef);
@@ -110,8 +106,8 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 }
 
 #pragma mark - Broadcast Status Updates -
-- (void)broadcastStatusChange
-{
+
+- (void)broadcastStatusChange {
     // Call the delegate if one is available
     if ([self.delegate respondsToSelector:@selector(reachability:didChangeStatusTo:)]) {
         [self.delegate reachability:self didChangeStatusTo:self.status];
@@ -131,8 +127,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 #pragma mark - Reachability Lifecycle -
 
-- (BOOL)start
-{
+- (BOOL)start {
     if (self.running) { return YES; }
 
     SCNetworkReachabilityContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
@@ -157,8 +152,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return result;
 }
 
-- (void)stop
-{
+- (void)stop {
     if (!self.running) { return; }
     SCNetworkReachabilityUnscheduleFromRunLoop(_reachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     self.running = NO;
@@ -166,8 +160,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 #pragma mark - Reachability State Tracking -
 
-- (TOReachabilityStatus)reachabilityStatusForFlags:(SCNetworkReachabilityFlags)flags
-{
+- (TOReachabilityStatus)reachabilityStatusForFlags:(SCNetworkReachabilityFlags)flags {
     // Not reachable at all
     if ((flags & kSCNetworkReachabilityFlagsReachable) == 0) {
         return TOReachabilityStatusNotAvailable;
@@ -198,8 +191,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return status;
 }
 
-    - (TOReachabilityStatus)fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags
-{
+- (TOReachabilityStatus)fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags {
     NSAssert(_reachabilityRef != NULL, @"currentNetworkStatus called with NULL SCNetworkReachabilityRef");
 
     TOReachabilityStatus status = TOReachabilityStatusNotAvailable;
@@ -221,8 +213,8 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 }
 
 #pragma mark - Internal Testing -
-- (void)_triggerCellularCallback
-{
+
+- (void)_triggerCellularCallback {
     SCNetworkReachabilityFlags flags = kSCNetworkReachabilityFlagsReachable | kSCNetworkReachabilityFlagsIsWWAN;
     TOReachabilityCallback(_reachabilityRef, flags, (__bridge void *)(self));
 }
