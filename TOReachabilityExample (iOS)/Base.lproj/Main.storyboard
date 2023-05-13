@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="gj9-s8-7gM">
-    <device id="retina6_5" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="gj9-s8-7gM">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -32,7 +31,7 @@
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" id="JOe-Bi-DyV">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="iG1-3Q-5NN">
                             <size key="itemSize" width="400" height="120"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -47,16 +46,18 @@
                                     <rect key="frame" x="0.0" y="0.0" width="400" height="120"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7wC-xc-Z9L" userLabel="BackgroundView">
-                                            <rect key="frame" x="0.0" y="0.0" width="400" height="124"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        </imageView>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zny-cc-Hib" userLabel="HighlightedView">
-                                            <rect key="frame" x="0.0" y="0.0" width="400" height="124"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        </imageView>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q3j-Pi-EQI" userLabel="BackgroundView">
+                                            <rect key="frame" x="0.0" y="0.0" width="400" height="120"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
+                                        </view>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bIW-Ox-iJU" userLabel="HighlightedView">
+                                            <rect key="frame" x="0.0" y="0.0" width="400" height="120"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Gq3-l2-7wl">
-                                            <rect key="frame" x="23" y="23" width="75" height="75"/>
+                                            <rect key="frame" x="23" y="22.666666666666671" width="75" height="75"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="75" id="CNx-aO-56P"/>
@@ -64,13 +65,14 @@
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WiFi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yok-00-hXQ" userLabel="TitleLabel">
-                                            <rect key="frame" x="118" y="44" width="262" height="33"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="27"/>
+                                            <rect key="frame" x="118" y="39.666666666666671" width="262" height="40.666666666666671"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                 </view>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="Yok-00-hXQ" secondAttribute="trailing" constant="20" id="HfA-Ki-X6b"/>
                                     <constraint firstItem="Gq3-l2-7wl" firstAttribute="centerY" secondItem="HHs-ff-0jN" secondAttribute="centerY" id="MBX-2U-1Vo"/>
@@ -80,15 +82,16 @@
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="contentView.layer.cornerRadius">
-                                        <integer key="value" value="15"/>
+                                        <integer key="value" value="30"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="contentView.layer.masksToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="contentView.layer.cornerCurve" value="continuous"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <outlet property="backgroundImageView" destination="7wC-xc-Z9L" id="H9m-QF-b0l"/>
-                                    <outlet property="highlightedImageView" destination="Zny-cc-Hib" id="cmP-zm-tki"/>
+                                    <outlet property="highlightedView" destination="bIW-Ox-iJU" id="8UR-lr-pzL"/>
                                     <outlet property="imageView" destination="Gq3-l2-7wl" id="9ji-vb-Gk8"/>
                                     <outlet property="titleLabel" destination="Yok-00-hXQ" id="hPT-eG-wAM"/>
+                                    <outlet property="unhighlightedView" destination="Q3j-Pi-EQI" id="OuQ-We-OHP"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -104,4 +107,12 @@
             <point key="canvasLocation" x="314.49275362318843" y="259.82142857142856"/>
         </scene>
     </scenes>
+    <resources>
+        <systemColor name="secondarySystemBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>

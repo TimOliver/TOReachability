@@ -1,7 +1,7 @@
 //
 //  TOReachability.h
 //
-//  Copyright 2019 Timothy Oliver. All rights reserved.
+//  Copyright 2019-2023 Timothy Oliver. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to
@@ -22,22 +22,26 @@
 
 #import <Foundation/Foundation.h>
 
-/** The current status of the device reachability */
+/// The current status of the device's reachability
 typedef NS_ENUM(NSInteger, TOReachabilityStatus) {
-    TOReachabilityStatusNotAvailable = 0,
-    TOReachabilityStatusWiFi,
-    TOReachabilityStatusCellular
+    TOReachabilityStatusNotAvailable = 0,   /// There is presently no network connection.
+    TOReachabilityStatusAvailable,          /// The device is online and connected to a network, either through WiFi or Ethernet.
+    TOReachabilityStatusAvailableOnCellular /// The device is connected to a cellular service, but not WiFi or Ethernet.
 } NS_SWIFT_NAME(Reachability.Status);
 
 NS_ASSUME_NONNULL_BEGIN
 
-// An NSNotification that will broadcast network status changes
+/// An NSNotification that will broadcast network status changes
 extern NSString *TOReachabilityStatusChangedNotification NS_SWIFT_NAME(Reachability.StatusChangedNotification);
 
 @class TOReachability;
 
 @protocol TOReachabilityDelegate <NSObject>
 
+/// Called whenever the reachability status of the device changes.
+/// - Parameters:
+///   - reachability: The reachability object that detected the change.
+///   - newStatus: The new netwotk status that the device changed to.
 - (void)reachability:(TOReachability *)reachability didChangeStatusTo:(TOReachabilityStatus)newStatus NS_SWIFT_NAME(reachability(_:didChangeTo:));
 
 @end
@@ -45,50 +49,37 @@ extern NSString *TOReachabilityStatusChangedNotification NS_SWIFT_NAME(Reachabil
 NS_SWIFT_NAME(Reachability)
 @interface TOReachability : NSObject
 
-/** Indiciates when the reachability class has been started and is currently running. */
+/// Indiciates that the reachability object has been started and is currently running.
 @property (nonatomic, readonly) BOOL running NS_SWIFT_NAME(isRunning);
 
-/** When YES, will broadcast an NSNotification whenever the status changes. Useful for an app-wide global object. (Defualt is NO) */
+/// When YES, will broadcast an NSNotification whenever the status changes. Useful for an app-wide global object. (Defualt is NO)
 @property (nonatomic, assign) BOOL broadcastsStatusChangeNotifications;
 
-/** The current status of network reachability */
+/// The current network reachability status of the device.
 @property (nonatomic, readonly) TOReachabilityStatus status;
 
-/** A delegate object that will be informed of status changes. */
+/// A delegate object that will be called whenever the reachability status changes.
 @property (nonatomic, weak) id<TOReachabilityDelegate> delegate;
 
-/** A block that is called each time the network status changes */
+/// As an alternative to the delegate, a block that will be called whenever the reachability status changes.
 @property (nonatomic, copy, nullable) void (^statusChangedHandler)(TOReachabilityStatus newStatus);
 
-/**
- Creates a new instance of the reachability class, that can be used
- to check the status of a specific hostname.
- 
- @return A new instance of the reachability object
- */
-+ (instancetype)reachabilityForInternetConnection NS_SWIFT_NAME(forInternetConnection());
+/// Creates a new reachability object configured to detect whenever an active internet connection is present
+/// (Whether on a cellular service, or on a local WiFi network)
++ (nullable instancetype)reachabilityForInternetConnection NS_SWIFT_NAME(forInternetConnection());
 
-/**
- Creates a new instance of the reachability class, that can be used
- to check only when on Wifi or not (Status will be `notAvailable` otherwise)
- 
- @return A new instance of the reachability object
- */
-+ (instancetype)reachabilityForWifiConnection NS_SWIFT_NAME(forWifiConnection());
+/// Creates a new reachability object configured to detect when connected to a local network and not a cellular service (either via Ethernet or Wifi).
+/// Use this configuration for Bonjour, or other operations that require communication between two devices on the same network.
++ (nullable instancetype)reachabilityForLocalNetworkConnection NS_SWIFT_NAME(forLocalNetworkConnection());
 
-/**
- Creates a new instance of the reachability class, that can be used
- to check the status of a specific hostname.
+/// Creates a new reachability object configured to detect that there is an active internet connection to an online host name.
+/// - Parameter hostName: The host name to target
++ (nullable instancetype)reachabilityWithHostName:(NSString *)hostName NS_SWIFT_NAME(init(hostName:));
 
- @param hostName The hostname to monitor
- @return A new instance of the reachability object
- */
-+ (instancetype)reachabilityWithHostName:(NSString *)hostName NS_SWIFT_NAME(init(hostName:));
-
-/** Start watching for reachability changes */
+/// Start watching for reachability changes
 - (BOOL)start;
 
-/** Stop watching for reachability changes */
+/// Stop watching for reachability changes
 - (void)stop;
 
 @end

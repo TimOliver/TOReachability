@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "221B1EFB2221575400975533"
-               BuildableName = "TOReachabilityExample.app"
-               BlueprintName = "TOReachabilityExample"
+               BuildableName = "TOReachabilityExample (iOS).app"
+               BlueprintName = "TOReachabilityExample (iOS)"
                ReferencedContainer = "container:TOReachabilityExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -26,13 +26,14 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "221B1EFB2221575400975533"
-            BuildableName = "TOReachabilityExample.app"
-            BlueprintName = "TOReachabilityExample"
+            BuildableName = "TOReachabilityExample (iOS).app"
+            BlueprintName = "TOReachabilityExample (iOS)"
             ReferencedContainer = "container:TOReachabilityExample.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -64,8 +65,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "221B1EFB2221575400975533"
-            BuildableName = "TOReachabilityExample.app"
-            BlueprintName = "TOReachabilityExample"
+            BuildableName = "TOReachabilityExample (iOS).app"
+            BlueprintName = "TOReachabilityExample (iOS)"
             ReferencedContainer = "container:TOReachabilityExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -81,8 +82,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "221B1EFB2221575400975533"
-            BuildableName = "TOReachabilityExample.app"
-            BlueprintName = "TOReachabilityExample"
+            BuildableName = "TOReachabilityExample (iOS).app"
+            BlueprintName = "TOReachabilityExample (iOS)"
             ReferencedContainer = "container:TOReachabilityExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

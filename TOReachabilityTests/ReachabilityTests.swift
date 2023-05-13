@@ -7,15 +7,19 @@
 //
 
 import XCTest
-import TOReachability
+@testable import TOReachability
+
+enum ReachabilityError: Error, Equatable {
+    case objectWasNil
+}
 
 class ReachabilityTests: XCTestCase {
 
-    func testSwiftSetupAndRun() {
+    func testSwiftSetupAndRun() throws {
         let expectation = XCTestExpectation(description: "Set up and run")
-
-        let reachability = Reachability.forInternetConnection()
-        XCTAssertNotNil(reachability)
+        guard let reachability = Reachability.forInternetConnection() else {
+            throw ReachabilityError.objectWasNil
+        }
 
         reachability.statusChangedHandler = {newStatus in
             expectation.fulfill()
@@ -27,8 +31,11 @@ class ReachabilityTests: XCTestCase {
         XCTAssertTrue(reachability.isRunning)
     }
 
-    func testNotificationBroadcast() {
-        let reachability = Reachability.forInternetConnection()
+    func testNotificationBroadcast() throws {
+        guard let reachability = Reachability.forInternetConnection() else {
+            throw ReachabilityError.objectWasNil
+        }
+
         reachability.broadcastsStatusChangeNotifications = true
         XCTAssertNotNil(reachability)
 

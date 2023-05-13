@@ -7,7 +7,15 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <SystemConfiguration/SystemConfiguration.h>
+
 #import "TOReachability.h"
+
+@interface TOReachability (Tests)
+
+- (TOReachabilityStatus)reachabilityStatusForFlags:(SCNetworkReachabilityFlags)flags;
+
+@end
 
 @interface TOReachabilityTests : XCTestCase <TOReachabilityDelegate>
 
@@ -17,11 +25,12 @@
 
 @implementation TOReachabilityTests
 
-- (void)testSwiftSetupAndRun
+- (void)testSetupAndRun
 {
     XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Set up and run"];
 
     TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
+
     XCTAssertNotNil(reachability);
 
     reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
@@ -37,6 +46,7 @@
 - (void)testNotificationBroadcast
 {
     TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
+
     reachability.broadcastsStatusChangeNotifications = YES;
     XCTAssertNotNil(reachability);
 
@@ -49,12 +59,15 @@
 - (void)testCellularConnection
 {
     TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
+
     XCTAssertNotNil(reachability);
 
     XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability Dedicated Stable Cellular"];
 
     reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
-        if (newStatus == TOReachabilityStatusCellular) { [expection fulfill]; }
+        if (newStatus == TOReachabilityStatusAvailableOnCellular) {
+            [expection fulfill];
+        }
     };
     [reachability start];
 
@@ -66,15 +79,40 @@
 
 - (void)testWiFiOnlyConnection
 {
-    TOReachability *reachability = [TOReachability reachabilityForWifiConnection];
+    TOReachability *reachability = [TOReachability reachabilityForLocalNetworkConnection];
+
     XCTAssertNotNil(reachability);
 
     // This test will be a failure if triggering a simulated cellular signal changes the status to cellular
-    XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability Dedicated Only Cellular"];
+    XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability WiFi Only"];
     expection.inverted = YES;
 
     reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
-        if (newStatus == TOReachabilityStatusCellular) { [expection fulfill]; }
+        if (newStatus == TOReachabilityStatusAvailableOnCellular) {
+            [expection fulfill];
+        }
+    };
+    [reachability start];
+
+    // Force trigger the internal callback method, simulating cellular
+    [reachability performSelector:NSSelectorFromString(@"_triggerCellularCallback") withObject:nil afterDelay:0];
+
+    [self waitForExpectations:@[expection] timeout:1.0f];
+}
+
+- (void)testHostNameConnection
+{
+    TOReachability *reachability = [TOReachability reachabilityWithHostName:@"www.timoliver.co"];
+
+    XCTAssertNotNil(reachability);
+
+    // This test will be a failure if triggering a simulated cellular signal changes the status to cellular
+    XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability Host Name Only"];
+
+    reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
+        if (newStatus == TOReachabilityStatusAvailableOnCellular) {
+            [expection fulfill];
+        }
     };
     [reachability start];
 
@@ -86,7 +124,8 @@
 
 - (void)testDelegate
 {
-    TOReachability *reachability = [TOReachability reachabilityForWifiConnection];
+    TOReachability *reachability = [TOReachability reachabilityForLocalNetworkConnection];
+
     XCTAssertNotNil(reachability);
 
     self.delegateExpectation = [[XCTestExpectation alloc] initWithDescription:@"Delegate successfully called"];
@@ -100,6 +139,23 @@
 - (void)reachability:(TOReachability *)reachability didChangeStatusTo:(TOReachabilityStatus)newStatus
 {
     [self.delegateExpectation fulfill];
+}
+
+- (void)testReachabilityStatusForFlags {
+    TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
+
+    XCTAssertNotNil(reachability);
+
+    XCTAssertEqual([reachability reachabilityStatusForFlags:0], TOReachabilityStatusNotAvailable);
+
+    SCNetworkReachabilityFlags reachableFlags = kSCNetworkReachabilityFlagsReachable;
+    XCTAssertEqual([reachability reachabilityStatusForFlags:reachableFlags], TOReachabilityStatusAvailable);
+
+    SCNetworkReachabilityFlags reachableAndOnDemandFlags = kSCNetworkReachabilityFlagsReachable | kSCNetworkReachabilityFlagsConnectionOnDemand;
+    XCTAssertEqual([reachability reachabilityStatusForFlags:reachableAndOnDemandFlags], TOReachabilityStatusAvailable);
+
+    SCNetworkReachabilityFlags reachableAndOnCellularFlags = kSCNetworkReachabilityFlagsReachable | kSCNetworkReachabilityFlagsIsWWAN;
+    XCTAssertEqual([reachability reachabilityStatusForFlags:reachableAndOnCellularFlags], TOReachabilityStatusAvailableOnCellular);
 }
 
 @end
