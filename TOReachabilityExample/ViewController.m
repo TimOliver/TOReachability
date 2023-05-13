@@ -94,7 +94,7 @@
 
     switch (indexPath.row) {
         case 0:
-            highlighted = (self.reachability.status == TOReachabilityStatusWiFi);
+            highlighted = (self.reachability.status == TOReachabilityStatusAvailable);
             cell.titleLabel.text = @"WiFi";
             cell.imageView.image = [UIImage systemImageNamed:@"wifi" withConfiguration:configuration];
             cell.highlightedView.alpha = highlighted ? 1.0f : 0.0f;
@@ -102,7 +102,7 @@
             break;
 
         case 1:
-            highlighted = (self.reachability.status == TOReachabilityStatusCellular);
+            highlighted = (self.reachability.status == TOReachabilityStatusAvailableOnCellular);
             cell.titleLabel.text = @"Cellular";
             cell.imageView.image = [UIImage systemImageNamed:@"antenna.radiowaves.left.and.right" withConfiguration:configuration];
             cell.highlightedView.alpha = highlighted ? 1.0f : 0.0f;
@@ -146,10 +146,8 @@
 
             BOOL highlighted = NO;
             switch (i) {
-                case 0: highlighted = (self.reachability.status == TOReachabilityStatusWiFi); break;
-
-                case 1: highlighted = (self.reachability.status == TOReachabilityStatusCellular); break;
-
+                case 0: highlighted = (self.reachability.status == TOReachabilityStatusAvailable); break;
+                case 1: highlighted = (self.reachability.status == TOReachabilityStatusAvailableOnCellular); break;
                 case 2: highlighted = (self.reachability.status == TOReachabilityStatusNotAvailable); break;
             }
 

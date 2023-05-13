@@ -65,7 +65,7 @@
     XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability Dedicated Stable Cellular"];
 
     reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
-        if (newStatus == TOReachabilityStatusCellular) {
+        if (newStatus == TOReachabilityStatusAvailableOnCellular) {
             [expection fulfill];
         }
     };
@@ -79,7 +79,7 @@
 
 - (void)testWiFiOnlyConnection
 {
-    TOReachability *reachability = [TOReachability reachabilityForWifiConnection];
+    TOReachability *reachability = [TOReachability reachabilityForLocalNetworkConnection];
 
     XCTAssertNotNil(reachability);
 
@@ -88,7 +88,7 @@
     expection.inverted = YES;
 
     reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
-        if (newStatus == TOReachabilityStatusCellular) {
+        if (newStatus == TOReachabilityStatusAvailableOnCellular) {
             [expection fulfill];
         }
     };
@@ -110,7 +110,7 @@
     XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability Host Name Only"];
 
     reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
-        if (newStatus == TOReachabilityStatusCellular) {
+        if (newStatus == TOReachabilityStatusAvailableOnCellular) {
             [expection fulfill];
         }
     };
@@ -124,7 +124,7 @@
 
 - (void)testDelegate
 {
-    TOReachability *reachability = [TOReachability reachabilityForWifiConnection];
+    TOReachability *reachability = [TOReachability reachabilityForLocalNetworkConnection];
 
     XCTAssertNotNil(reachability);
 
@@ -149,13 +149,13 @@
     XCTAssertEqual([reachability reachabilityStatusForFlags:0], TOReachabilityStatusNotAvailable);
 
     SCNetworkReachabilityFlags reachableFlags = kSCNetworkReachabilityFlagsReachable;
-    XCTAssertEqual([reachability reachabilityStatusForFlags:reachableFlags], TOReachabilityStatusWiFi);
+    XCTAssertEqual([reachability reachabilityStatusForFlags:reachableFlags], TOReachabilityStatusAvailable);
 
     SCNetworkReachabilityFlags reachableAndOnDemandFlags = kSCNetworkReachabilityFlagsReachable | kSCNetworkReachabilityFlagsConnectionOnDemand;
-    XCTAssertEqual([reachability reachabilityStatusForFlags:reachableAndOnDemandFlags], TOReachabilityStatusWiFi);
+    XCTAssertEqual([reachability reachabilityStatusForFlags:reachableAndOnDemandFlags], TOReachabilityStatusAvailable);
 
     SCNetworkReachabilityFlags reachableAndOnCellularFlags = kSCNetworkReachabilityFlagsReachable | kSCNetworkReachabilityFlagsIsWWAN;
-    XCTAssertEqual([reachability reachabilityStatusForFlags:reachableAndOnCellularFlags], TOReachabilityStatusCellular);
+    XCTAssertEqual([reachability reachabilityStatusForFlags:reachableAndOnCellularFlags], TOReachabilityStatusAvailableOnCellular);
 }
 
 @end
