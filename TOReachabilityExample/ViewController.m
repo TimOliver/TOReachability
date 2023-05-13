@@ -18,15 +18,6 @@
 
 @property (nonatomic, strong) TOReachability *reachability;
 
-@property (nonatomic, strong) UIImage *notAvailableOffImage;
-@property (nonatomic, strong) UIImage *notAvailableOnImage;
-
-@property (nonatomic, strong) UIImage *wifiOffImage;
-@property (nonatomic, strong) UIImage *wifiOnImage;
-
-@property (nonatomic, strong) UIImage *cellularOffImage;
-@property (nonatomic, strong) UIImage *cellularOnImage;
-
 @end
 
 @implementation ViewController
@@ -34,28 +25,22 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    UINavigationBar *bar = self.navigationController.navigationBar;
-    bar.shadowImage = [UIImage new];
-    bar.barTintColor = [UIColor whiteColor];
-
-    [self setUpImages];
-
     __weak typeof(self) weakSelf = self;
 
     self.reachability = [TOReachability reachabilityForInternetConnection];
     self.reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
-        [weakSelf updateCells];
+        [weakSelf updateCellsAnimated:YES];
     };
     [self.reachability start];
 }
 
-- (void)viewDidLayoutSubviews
-{
+- (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
 
     CGRect bounds = self.collectionView.bounds;
     UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
 
+    // On compact size classes (eg iPhone), have the cells stretch edge-to-edge
     if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact) {
         UIEdgeInsets insets = (UIEdgeInsets){5.0f, 8.0f, 16.0f, 8.0f};
         layout.sectionInset = insets;
@@ -65,7 +50,7 @@
             self.navigationController.navigationBar.largeTitleTextAttributes = nil;
         }
     }
-    else {
+    else { // On iPad, center the cells in the middle of the screen
         UIView *view = self.navigationController.view;
         CGFloat width = 650;
         CGFloat padding = (view.frame.size.width - (width)) * 0.5f;
@@ -78,7 +63,7 @@
 
         layout.itemSize = (CGSize){width, 124};
 
-        // Inset navigation bar
+        // Inset the navigation bar so the large title also aligns with the cells
         insets = self.navigationController.navigationBar.layoutMargins;
         insets.left = padding;
         insets.right = padding;
@@ -86,74 +71,62 @@
     }
 }
 
-- (void)setUpImages
-{
-    UIColor* topColor = [UIColor colorWithRed: 0.904 green: 0.904 blue: 0.904 alpha: 1];
-    UIColor* bottomColor = [UIColor colorWithRed: 0.673 green: 0.673 blue: 0.673 alpha: 1];
-    self.notAvailableOffImage = [[self class] backgroundImageWithTopColor:topColor bottomColor:bottomColor];
-
-    topColor = [UIColor colorWithRed: 1 green: 0.271 blue: 0.271 alpha: 1];
-    bottomColor = [UIColor colorWithRed: 0.556 green: 0 blue: 0 alpha: 1];
-    self.notAvailableOnImage = [[self class] backgroundImageWithTopColor:topColor bottomColor:bottomColor];
-
-    topColor = [UIColor colorWithRed: 0.904 green: 0.904 blue: 0.904 alpha: 1];
-    bottomColor = [UIColor colorWithRed: 0.673 green: 0.673 blue: 0.673 alpha: 1];
-    self.wifiOffImage = [[self class] backgroundImageWithTopColor:topColor bottomColor:bottomColor];
-
-    topColor = [UIColor colorWithRed: 0.029 green: 0.948 blue: 0 alpha: 1];
-    bottomColor = [UIColor colorWithRed: 0.008 green: 0.329 blue: 0 alpha: 1];
-    self.wifiOnImage = [[self class] backgroundImageWithTopColor:topColor bottomColor:bottomColor];
-
-    topColor = [UIColor colorWithRed: 0.904 green: 0.904 blue: 0.904 alpha: 1];
-    bottomColor = [UIColor colorWithRed: 0.673 green: 0.673 blue: 0.673 alpha: 1];
-    self.cellularOffImage = [[self class] backgroundImageWithTopColor:topColor bottomColor:bottomColor];
-
-    topColor = [UIColor colorWithRed: 1 green: 0.926 blue: 0.271 alpha: 1];
-    bottomColor = [UIColor colorWithRed: 0.556 green: 0.478 blue: 0 alpha: 1];
-    self.cellularOnImage = [[self class] backgroundImageWithTopColor:topColor bottomColor:bottomColor];
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    [super traitCollectionDidChange:previousTraitCollection];
+    [self updateCellsAnimated:NO];
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return 3;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     CollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CollectionViewCell" forIndexPath:indexPath];
 
+    UIImageSymbolConfiguration *configuration = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
+
+    BOOL highlighted = NO;
     switch (indexPath.row) {
         case 0:
+            highlighted = (self.reachability.status == TOReachabilityStatusWiFi);
             cell.titleLabel.text = @"WiFi";
-            cell.imageView.image = [UIImage imageNamed:@"WiFi"];
-            cell.backgroundImageView.image = self.wifiOffImage;
-            cell.highlightedImageView.image = self.wifiOnImage;
-            cell.highlightedImageView.alpha = (self.reachability.status == TOReachabilityStatusWiFi) ? 1.0f : 0.0f;
+            cell.imageView.image = [UIImage systemImageNamed:@"wifi" withConfiguration:configuration];
+            cell.highlightedView.alpha = highlighted ? 1.0f : 0.0f;
+            cell.highlightedView.backgroundColor = UIColor.systemGreenColor;
             break;
         case 1:
+            highlighted = (self.reachability.status == TOReachabilityStatusCellular);
             cell.titleLabel.text = @"Cellular";
-            cell.imageView.image = [UIImage imageNamed:@"Bars"];
-            cell.backgroundImageView.image = self.cellularOffImage;
-            cell.highlightedImageView.image = self.cellularOnImage;
-            cell.highlightedImageView.alpha = (self.reachability.status == TOReachabilityStatusCellular) ? 1.0f : 0.0f;
+            cell.imageView.image = [UIImage systemImageNamed:@"antenna.radiowaves.left.and.right" withConfiguration:configuration];
+            cell.highlightedView.alpha = highlighted ? 1.0f : 0.0f;
+            cell.highlightedView.backgroundColor = UIColor.systemYellowColor;
             break;
         case 2:
+            highlighted = (self.reachability.status == TOReachabilityStatusNotAvailable);
             cell.titleLabel.text = @"Offline";
-            cell.imageView.image = [UIImage imageNamed:@"Disconnected"];
-            cell.backgroundImageView.image = self.notAvailableOffImage;
-            cell.highlightedImageView.image = self.notAvailableOnImage;
-            cell.highlightedImageView.alpha = (self.reachability.status == TOReachabilityStatusNotAvailable) ? 1.0f : 0.0f;
+            cell.imageView.image = [UIImage systemImageNamed:@"icloud.slash" withConfiguration:configuration];
+            cell.highlightedView.alpha = highlighted ? 1.0f : 0.0f;
+            cell.highlightedView.backgroundColor = UIColor.systemRedColor;
             break;
         default:
             break;
     }
 
+    [self updateTintingWithCell:cell highlighted:highlighted];
+
     return cell;
 }
 
-- (void)updateCells
+- (void)updateTintingWithCell:(CollectionViewCell *)cell highlighted:(BOOL)highlighted {
+    BOOL isDarkMode = self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark;
+    UIColor *unhilightedColor = isDarkMode ? UIColor.whiteColor : UIColor.blackColor;
+    cell.titleLabel.textColor = highlighted ? UIColor.whiteColor : unhilightedColor;
+    cell.imageView.tintColor = highlighted ? UIColor.whiteColor : unhilightedColor;
+}
+
+- (void)updateCellsAnimated:(BOOL)animated
 {
-    [UIView animateWithDuration:0.3f animations:^{
+    void (^animationBlock)(void) = ^{
         for (NSInteger i = 0; i < 3; i++) {
             CollectionViewCell *cell = (CollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
             if (cell == nil) { continue; }
@@ -165,39 +138,17 @@
                 case 2: highlighted = (self.reachability.status == TOReachabilityStatusNotAvailable); break;
             }
 
-            cell.highlightedImageView.alpha = highlighted ? 1.0f : 0.0f;
+            cell.highlightedView.alpha = highlighted ? 1.0f : 0.0f;
+            [self updateTintingWithCell:cell highlighted:highlighted];
         }
-    }];
-}
+    };
 
-+ (UIImage *)backgroundImageWithTopColor:(UIColor *)topColor bottomColor:(UIColor *)bottomColor
-{
-    UIImage *image = nil;
-
-    UIGraphicsBeginImageContextWithOptions((CGSize){124,124}, YES, 0.0);
-    {
-        //// General Declarations
-        CGContextRef context = UIGraphicsGetCurrentContext();
-
-        //// Gradient Declarations
-        CGFloat gradientLocations[] = {0, 1};
-        CGGradientRef gradient = CGGradientCreateWithColors(NULL, (__bridge CFArrayRef)@[(id)topColor.CGColor, (id)bottomColor.CGColor], gradientLocations);
-
-        //// Rectangle Drawing
-        UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(0, 0, 124, 124)];
-        CGContextSaveGState(context);
-        [rectanglePath addClip];
-        CGContextDrawLinearGradient(context, gradient, CGPointMake(62, -0), CGPointMake(62, 124), kNilOptions);
-        CGContextRestoreGState(context);
-
-        //// Cleanup
-        CGGradientRelease(gradient);
-
-        image = UIGraphicsGetImageFromCurrentImageContext();
+    if (!animated) {
+        animationBlock();
+        return;
     }
-    UIGraphicsEndImageContext();
 
-    return image;
+    [UIView animateWithDuration:0.3f animations:animationBlock];
 }
 
 @end
