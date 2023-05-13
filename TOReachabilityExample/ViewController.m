@@ -12,10 +12,6 @@
 
 @interface ViewController () <UICollectionViewDelegate, UICollectionViewDataSource>
 
-@property (weak, nonatomic) IBOutlet UILabel *wifiLabel;
-@property (weak, nonatomic) IBOutlet UILabel *barsLabel;
-@property (weak, nonatomic) IBOutlet UILabel *disconnectedLabel;
-
 @property (nonatomic, strong) TOReachability *reachability;
 
 @end
@@ -25,11 +21,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    // Set up an configure a new reachability instance
     __weak typeof(self) weakSelf = self;
-
     self.reachability = [TOReachability reachabilityForInternetConnection];
     self.reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
-        [weakSelf updateCellsAnimated:YES];
+        [weakSelf _updateCellsAnimated:YES];
     };
     [self.reachability start];
 }
@@ -78,8 +74,21 @@
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
     [super traitCollectionDidChange:previousTraitCollection];
-    [self updateCellsAnimated:NO];
+    [self _updateCellsAnimated:NO];
 }
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
+#if TARGET_OS_MACCATALYST
+    // Hide the toolbar on Mac Catalyst
+    UIWindowScene *scene = self.view.window.windowScene;
+    scene.titlebar.titleVisibility = UITitlebarTitleVisibilityHidden;
+    scene.titlebar.toolbar = nil;
+#endif
+}
+
+#pragma mark - UICollectionViewDataSource -
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return 3;
@@ -95,7 +104,11 @@
     switch (indexPath.row) {
         case 0:
             highlighted = (self.reachability.status == TOReachabilityStatusAvailable);
+#if TARGET_OS_MACCATALYST || TARGET_OS_TVOS
+            cell.titleLabel.text = @"Online";
+#else
             cell.titleLabel.text = @"WiFi";
+#endif
             cell.imageView.image = [UIImage systemImageNamed:@"wifi" withConfiguration:configuration];
             cell.highlightedView.alpha = highlighted ? 1.0f : 0.0f;
             cell.highlightedView.backgroundColor = UIColor.systemGreenColor;
@@ -121,12 +134,14 @@
             break;
     }
 
-    [self updateTintingWithCell:cell highlighted:highlighted];
+    [self _updateTintingWithCell:cell highlighted:highlighted];
 
     return cell;
 }
 
-- (void)updateTintingWithCell:(CollectionViewCell *)cell highlighted:(BOOL)highlighted {
+#pragma - Private Methods -
+
+- (void)_updateTintingWithCell:(CollectionViewCell *)cell highlighted:(BOOL)highlighted {
     BOOL isDarkMode = self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark;
     UIColor *unhilightedColor = isDarkMode ? UIColor.whiteColor : UIColor.blackColor;
 
@@ -134,8 +149,7 @@
     cell.imageView.tintColor = highlighted ? UIColor.whiteColor : unhilightedColor;
 }
 
-- (void)updateCellsAnimated:(BOOL)animated
-{
+- (void)_updateCellsAnimated:(BOOL)animated {
     void (^animationBlock)(void) = ^{
         for (NSInteger i = 0; i < 3; i++) {
             CollectionViewCell *cell = (CollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
@@ -152,7 +166,7 @@
             }
 
             cell.highlightedView.alpha = highlighted ? 1.0f : 0.0f;
-            [self updateTintingWithCell:cell highlighted:highlighted];
+            [self _updateTintingWithCell:cell highlighted:highlighted];
         }
     };
 
