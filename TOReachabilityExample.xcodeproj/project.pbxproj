@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 53;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -20,6 +20,10 @@
 		2258DEC7223013BB00298AF0 /* ReachabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2258DEC6223013BB00298AF0 /* ReachabilityTests.swift */; };
 		22A3D6C62A0F44C1006ADBCA /* TOReachability.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A3D6C02A0F44C1006ADBCA /* TOReachability.framework */; };
 		22A3D6C72A0F44C1006ADBCA /* TOReachability.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22A3D6C02A0F44C1006ADBCA /* TOReachability.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		22A3D6CC2A0F5BBA006ADBCA /* TOReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 2250F8932236D2920074BD3A /* TOReachability.m */; };
+		22A3D6CD2A0F5BC2006ADBCA /* TOReachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 2250F8922236D2920074BD3A /* TOReachability.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		22A3D6D02A0F5BE4006ADBCA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A3D6CF2A0F5BE4006ADBCA /* SystemConfiguration.framework */; platformFilters = (ios, maccatalyst, macos, tvos, ); };
+		22A3D6D22A0F5BEB006ADBCA /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A3D6D12A0F5BEB006ADBCA /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +81,8 @@
 		2258DEC6223013BB00298AF0 /* ReachabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityTests.swift; sourceTree = "<group>"; };
 		22A3D6C02A0F44C1006ADBCA /* TOReachability.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TOReachability.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		22A3D6CB2A0F5734006ADBCA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		22A3D6CF2A0F5BE4006ADBCA /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
+		22A3D6D12A0F5BEB006ADBCA /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +105,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22A3D6D22A0F5BEB006ADBCA /* CoreFoundation.framework in Frameworks */,
+				22A3D6D02A0F5BE4006ADBCA /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,6 +123,7 @@
 				221B1EFD2221575400975533 /* Products */,
 				2250F87E2236C8150074BD3A /* CHANGELOG.md */,
 				22A3D6CB2A0F5734006ADBCA /* README.md */,
+				22A3D6CE2A0F5BE4006ADBCA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -174,6 +183,15 @@
 			path = TOReachability;
 			sourceTree = "<group>";
 		};
+		22A3D6CE2A0F5BE4006ADBCA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				22A3D6D12A0F5BEB006ADBCA /* CoreFoundation.framework */,
+				22A3D6CF2A0F5BE4006ADBCA /* SystemConfiguration.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -181,6 +199,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22A3D6CD2A0F5BC2006ADBCA /* TOReachability.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +358,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22A3D6CC2A0F5BBA006ADBCA /* TOReachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -612,13 +632,13 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx watchos watchsimulator";
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = "1,2,3,4";
+				TARGETED_DEVICE_FAMILY = "1,2,3";
 				TVOS_DEPLOYMENT_TARGET = 11.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -661,12 +681,12 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx watchos watchsimulator";
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				TARGETED_DEVICE_FAMILY = "1,2,3,4";
+				TARGETED_DEVICE_FAMILY = "1,2,3";
 				TVOS_DEPLOYMENT_TARGET = 11.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
