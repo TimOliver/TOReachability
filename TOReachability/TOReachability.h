@@ -66,16 +66,16 @@ NS_SWIFT_NAME(Reachability)
 
 /// Creates a new reachability object that can be used to check whenever an active internet connection is present
 /// (Whether on a cellular service, or on a local WiFi network)
-+ (instancetype)reachabilityForInternetConnection NS_SWIFT_NAME(forInternetConnection());
++ (nullable instancetype)reachabilityForInternetConnection NS_SWIFT_NAME(forInternetConnection());
 
 /// Creates a new reachability object that can be used
 /// to check only when on WiFi or not (Status will be `notAvailable` otherwise)
-+ (instancetype)reachabilityForWifiConnection NS_SWIFT_NAME(forWifiConnection());
++ (nullable instancetype)reachabilityForWifiConnection NS_SWIFT_NAME(forWifiConnection());
 
 /// Creates a new reachability object that can be used to check that there is an active internet connection
 /// able to reach a specific host name
 /// - Parameter hostName: The host name to target
-+ (instancetype)reachabilityWithHostName:(NSString *)hostName NS_SWIFT_NAME(init(hostName:));
++ (nullable instancetype)reachabilityWithHostName:(NSString *)hostName NS_SWIFT_NAME(init(hostName:));
 
 /// Start watching for reachability changes
 - (BOOL)start;
