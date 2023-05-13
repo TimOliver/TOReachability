@@ -29,6 +29,8 @@ typedef NS_ENUM(NSInteger, TOReachabilityStatus) {
     TOReachabilityStatusCellular
 } NS_SWIFT_NAME(Reachability.Status);
 
+NS_ASSUME_NONNULL_BEGIN
+
 // An NSNotification that will broadcast network status changes
 extern NSString *TOReachabilityStatusChangedNotification NS_SWIFT_NAME(Reachability.StatusChangedNotification);
 
@@ -39,8 +41,6 @@ extern NSString *TOReachabilityStatusChangedNotification NS_SWIFT_NAME(Reachabil
 - (void)reachability:(TOReachability *)reachability didChangeStatusTo:(TOReachabilityStatus)newStatus NS_SWIFT_NAME(reachability(_:didChangeTo:));
 
 @end
-
-NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(Reachability)
 @interface TOReachability : NSObject
