@@ -33,6 +33,8 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
 
+    self.collectionView.layoutMargins = UIEdgeInsetsZero;
+
     CGRect bounds = self.collectionView.bounds;
     UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
 
