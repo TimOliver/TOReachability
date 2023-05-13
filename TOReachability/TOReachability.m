@@ -74,7 +74,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return reachability;
 }
 
-+ (instancetype)reachabilityForWifiConnection {
++ (instancetype)reachabilityForLocalNetworkConnection {
     // Create a zero address reachability object and configure it to only care about wifi
     TOReachability *reachability = [[self class] reachabilityForInternetConnection];
 
@@ -169,7 +169,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
     // If the target host is reachable and no connection is required then we'll assume (for now) that you're on Wi-Fi...
     if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0) {
-        status = TOReachabilityStatusWiFi;
+        status = TOReachabilityStatusAvailable;
     }
 
     // and the connection is on-demand (or on-traffic) if the calling application is using the CFSocketStream or higher APIs...
@@ -177,13 +177,13 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
          (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0)) {
         //... and no [user] intervention is needed...
         if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0) {
-            status = TOReachabilityStatusWiFi;
+            status = TOReachabilityStatusAvailable;
         }
     }
 
     // ... but WWAN connections are OK if the calling application is using the CFNetwork APIs.
     if ((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN) {
-        status = TOReachabilityStatusCellular;
+        status = TOReachabilityStatusAvailableOnCellular;
     }
 
     return status;
@@ -202,8 +202,8 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     // Convert the provided flags into a practical status value
     status = [self reachabilityStatusForFlags:flags];
 
-    // Override cellular to "Unavailable" when only a Wi-Fi signal is desired
-    if (status == TOReachabilityStatusCellular && self.wifiOnly) {
+    // Override cellular to "Unavailable" when only a non-cellular connection is required.
+    if (status == TOReachabilityStatusAvailableOnCellular && self.wifiOnly) {
         status = TOReachabilityStatusNotAvailable;
     }
 
