@@ -51,6 +51,7 @@
 #if TARGET_OS_IOS
         if (@available(iOS 11.0, *)) {
             self.navigationController.navigationBar.largeTitleTextAttributes = nil;
+            self.navigationController.navigationBar.layoutMargins = self.navigationController.view.layoutMargins;
         }
 #endif
     } else { // On iPad/tvOS, center the cells in the middle of the screen
