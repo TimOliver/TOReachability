@@ -26,8 +26,8 @@ While `TOReachability` only currently includes the most basic of functionality, 
 * Fully-bridged and tested to work in Swift.
 
 ## Requirements
-* iOS 9.0 
-* Xcode 10.0 or higher
+* iOS 11.0 
+* Xcode 14.0 or higher
 
 ## Installation Instructions
 
@@ -79,7 +79,7 @@ reachability.start()
 
 Developed by [Tim Oliver](http://twitter.com/TimOliverAU) as a component for [iComics](http://icomics.co).
 
-Device mockup by [Pixeden](http://pixeden.com).
+Device mockup by [Mockups Design](https://mockups-design.com/).
 
 ## License
 
