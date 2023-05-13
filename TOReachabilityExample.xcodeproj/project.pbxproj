@@ -76,6 +76,7 @@
 		2258DEC5223013BB00298AF0 /* TOReachabilityTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TOReachabilityTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		2258DEC6223013BB00298AF0 /* ReachabilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityTests.swift; sourceTree = "<group>"; };
 		22A3D6C02A0F44C1006ADBCA /* TOReachability.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TOReachability.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		22A3D6CB2A0F5734006ADBCA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +114,7 @@
 				221B1F172221575500975533 /* TOReachabilityTests */,
 				221B1EFD2221575400975533 /* Products */,
 				2250F87E2236C8150074BD3A /* CHANGELOG.md */,
+				22A3D6CB2A0F5734006ADBCA /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
