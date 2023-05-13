@@ -1,4 +1,4 @@
-<img src="https://github.com/TimOliver/TOReachability/raw/main/screenshot.jpg" align="right" width="400" />
+<img src="https://github.com/TimOliver/TOReachability/raw/main/screenshot.png" align="right" width="420" />
 
 # TOReachability
 	
@@ -80,11 +80,6 @@ reachability.start()
 Developed by [Tim Oliver](http://twitter.com/TimOliverAU) as a component for [iComics](http://icomics.co).
 
 Device mockup by [Pixeden](http://pixeden.com).
-
-**App Icons**
-* [Four Bars](https://thenounproject.com/icon/2191085/) icon by Zach Bogart, US.
-* [WiFi](https://thenounproject.com/icon/1831138/) icon by Untashable, US.
-* [Disconnected](https://thenounproject.com/icon/683381/) icon by naim, MX.
 
 ## License
 
