@@ -1,4 +1,4 @@
-<img src="https://github.com/TimOliver/TOReachability/raw/master/screenshot.jpg" align="right" width="400" />
+<img src="https://github.com/TimOliver/TOReachability/raw/main/screenshot.jpg" align="right" width="400" />
 
 # TOReachability
 	
