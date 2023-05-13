@@ -181,7 +181,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
         }
     }
 
-#ifndef TARGET_OS_OSX
+#if !TARGET_OS_OSX
     // ... but WWAN connections are OK if the calling application is using the CFNetwork APIs.
     if ((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN) {
         status = TOReachabilityStatusAvailableOnCellular;
@@ -216,7 +216,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 - (void)_triggerCellularCallback {
     SCNetworkReachabilityFlags flags = kSCNetworkReachabilityFlagsReachable;
-#ifndef TARGET_OS_OSX
+#if !TARGET_OS_OSX
     flags |= kSCNetworkReachabilityFlagsIsWWAN;
 #endif
     TOReachabilityCallback(_reachabilityRef, flags, (__bridge void *)(self));

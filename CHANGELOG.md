@@ -10,6 +10,12 @@ x.y.z Release Notes (yyyy-MM-dd)
 ### Compatibility
 * None.
 
+1.0.1 Release Notes (2023-05-13)
+=============================================================
+
+### Fixed
+* A typo that was causing unit tests to fail.
+
 1.0.0 Release Notes (2023-05-13)
 =============================================================
 
