@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import TOReachability
 
 class ReachabilityTests: XCTestCase {
 
