@@ -112,7 +112,7 @@
     switch (indexPath.row) {
         case 0:
             highlighted = (self.reachability.status == TOReachabilityStatusAvailable);
-#if TARGET_OS_MACCATALYST
+#if (TARGET_OS_MACCATALYST || TARGET_OS_TV)
             cell.titleLabel.text = @"Online";
 #else
             cell.titleLabel.text = @"WiFi";
