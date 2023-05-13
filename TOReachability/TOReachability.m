@@ -174,7 +174,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     }
 
     // and the connection is on-demand (or on-traffic) if the calling application is using the CFSocketStream or higher APIs...
-    if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand ) != 0) ||
+    if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand) != 0) ||
          (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0))
     {
         //... and no [user] intervention is needed...
