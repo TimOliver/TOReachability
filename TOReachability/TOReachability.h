@@ -42,7 +42,8 @@ extern NSString *TOReachabilityStatusChangedNotification NS_SWIFT_NAME(Reachabil
 /// - Parameters:
 ///   - reachability: The reachability object that detected the change.
 ///   - newStatus: The new netwotk status that the device changed to.
-- (void)reachability:(TOReachability *)reachability didChangeStatusTo:(TOReachabilityStatus)newStatus NS_SWIFT_NAME(reachability(_:didChangeTo:));
+- (void)reachability:(TOReachability *)reachability
+   didChangeStatusTo:(TOReachabilityStatus)newStatus NS_SWIFT_NAME(reachability(_:didChangeTo:));
 
 @end
 
@@ -52,26 +53,35 @@ NS_SWIFT_NAME(Reachability)
 /// Indiciates that the reachability object has been started and is currently running.
 @property (nonatomic, readonly) BOOL running NS_SWIFT_NAME(isRunning);
 
-/// When YES, will broadcast an NSNotification whenever the status changes. Useful for an app-wide global object. (Defualt is NO)
-@property (nonatomic, assign) BOOL broadcastsStatusChangeNotifications;
-
-/// The current network reachability status of the device.
+/// The current network reachability status of the device, whether offline, online, or online with cellular.
 @property (nonatomic, readonly) TOReachabilityStatus status;
+
+/// A convenience property for checking there is an active internet connection (regardless of cellular or local connectivity)
+@property (nonatomic, readonly) BOOL hasInternetConnection;
+
+/// A convenience property for checking there is an active local connection (ie, only a WiFi or Ethernet connection)
+@property (nonatomic, readonly) BOOL hasLocalNetworkConnection;
+
+/// A convenience property for checking there is an active cellular connection, but isn't on Ethernet or WiFi.
+@property (nonatomic, readonly) BOOL hasCellularConnection;
 
 /// A delegate object that will be called whenever the reachability status changes.
 @property (nonatomic, weak) id<TOReachabilityDelegate> delegate;
 
+/// As an alternative to the delegate, a block that will be called whenever the reachability status changes.
+@property (nonatomic, copy, nullable) void (^statusChangedHandler)(TOReachabilityStatus newStatus);
+
 /// An array of all of the listener objects currently subscribed to this reachability object.
 @property (nonatomic, readonly) NSArray<id<TOReachabilityDelegate>> *listeners;
 
-/// As an alternative to the delegate, a block that will be called whenever the reachability status changes.
-@property (nonatomic, copy, nullable) void (^statusChangedHandler)(TOReachabilityStatus newStatus);
+/// When YES, will broadcast an NSNotification whenever the status changes. Useful for an app-wide global object. (Defualt is NO)
+@property (nonatomic, assign) BOOL broadcastsStatusChangeNotifications;
 
 /// Creates a new reachability object configured to detect whenever an active internet connection is present
 /// (Whether on a cellular service, or on a local WiFi network)
 + (nullable instancetype)reachabilityForInternetConnection NS_SWIFT_NAME(forInternetConnection());
 
-/// Creates a new reachability object configured to detect when connected to a local network and not a cellular service (either via Ethernet or Wifi).
+/// Creates a new reachability object configured to detect when connected to a local network (via WiFi or Ethernet) and will disregard cellular status.
 /// Use this configuration for Bonjour, or other operations that require communication between two devices on the same network.
 + (nullable instancetype)reachabilityForLocalNetworkConnection NS_SWIFT_NAME(forLocalNetworkConnection());
 

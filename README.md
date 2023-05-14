@@ -3,7 +3,7 @@
 # TOReachability
 	
 [![CI](https://github.com/TimOliver/TOReachability/workflows/CI/badge.svg)](https://github.com/TimOliver/TOReachability/actions?query=workflow%3ACI)
-[![Version](https://img.shields.io/badge/version-1.1.0-blueviolet?style=flat)](http://cocoadocs.org/docsets/TOReachability)
+[![Version](https://img.shields.io/badge/version-1.2.0-blueviolet?style=flat)](http://cocoadocs.org/docsets/TOReachability)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/TimOliver/TOReachability/master/LICENSE)
 [![PayPal](https://img.shields.io/badge/paypal-donate-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M4RKULAVKV7K8)

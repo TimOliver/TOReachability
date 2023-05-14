@@ -232,12 +232,29 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return _listeners.allObjects;
 }
 
+- (BOOL)hasInternetConnection {
+    return _status == TOReachabilityStatusAvailable || _status == TOReachabilityStatusAvailableOnCellular;
+}
+
+- (BOOL)hasLocalNetworkConnection {
+    return _status == TOReachabilityStatusAvailable;
+}
+
+- (BOOL)hasCellularConnection {
+    return _status == TOReachabilityStatusAvailableOnCellular;
+}
+
 #pragma mark - Internal Testing -
 
-- (void)_triggerCellularCallback {
+- (void)_triggerCallbackWithCellular:(BOOL)cellular wifi:(BOOL)wifi {
     SCNetworkReachabilityFlags flags = kSCNetworkReachabilityFlagsReachable;
+    if (wifi) {
+        flags |= kSCNetworkReachabilityFlagsConnectionOnDemand;
+    }
 #if !TARGET_OS_OSX
-    flags |= kSCNetworkReachabilityFlagsIsWWAN;
+    if (cellular) {
+        flags |= kSCNetworkReachabilityFlagsIsWWAN;
+    }
 #endif
     TOReachabilityCallback(_reachabilityRef, flags, (__bridge void *)(self));
 }

@@ -14,7 +14,7 @@
 @interface TOReachability (Tests)
 
 - (TOReachabilityStatus)_reachabilityStatusForFlags:(SCNetworkReachabilityFlags)flags;
-- (void)_triggerCellularCallback;
+- (void)_triggerCallbackWithCellular:(BOOL)cellular wifi:(BOOL)wifi;
 
 @end
 
@@ -60,7 +60,6 @@
 - (void)testCellularConnection
 {
     TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
-
     XCTAssertNotNil(reachability);
 
     XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability Dedicated Stable Cellular"];
@@ -73,7 +72,7 @@
     [reachability start];
 
     // Force trigger the internal callback method, simulating cellular
-    [reachability _triggerCellularCallback];
+    [reachability _triggerCallbackWithCellular:YES wifi:NO];
 
     [self waitForExpectations:@[expection] timeout:1.0f];
 }
@@ -81,22 +80,20 @@
 - (void)testWiFiOnlyConnection
 {
     TOReachability *reachability = [TOReachability reachabilityForLocalNetworkConnection];
-
     XCTAssertNotNil(reachability);
 
     // This test will be a failure if triggering a simulated cellular signal changes the status to cellular
     XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability WiFi Only"];
-    expection.inverted = YES;
 
     reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
-        if (newStatus == TOReachabilityStatusAvailableOnCellular) {
+        if (newStatus == TOReachabilityStatusNotAvailable) {
             [expection fulfill];
         }
     };
     [reachability start];
 
     // Force trigger the internal callback method, simulating cellular
-    [reachability _triggerCellularCallback];
+    [reachability _triggerCallbackWithCellular:YES wifi:NO];
 
     [self waitForExpectations:@[expection] timeout:1.0f];
 }
@@ -104,7 +101,6 @@
 - (void)testHostNameConnection
 {
     TOReachability *reachability = [TOReachability reachabilityWithHostName:@"www.timoliver.co"];
-
     XCTAssertNotNil(reachability);
 
     // This test will be a failure if triggering a simulated cellular signal changes the status to cellular
@@ -118,9 +114,23 @@
     [reachability start];
 
     // Force trigger the internal callback method, simulating cellular
-    [reachability performSelector:NSSelectorFromString(@"_triggerCellularCallback") withObject:nil afterDelay:0];
+    [reachability _triggerCallbackWithCellular:YES wifi:NO];
 
     [self waitForExpectations:@[expection] timeout:1.0f];
+}
+
+- (void)testConvenienceProperties {
+    TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
+    XCTAssertNotNil(reachability);
+
+    [reachability _triggerCallbackWithCellular:YES wifi:NO];
+    XCTAssertTrue(reachability.hasCellularConnection);
+
+    [reachability _triggerCallbackWithCellular:NO wifi:YES];
+    XCTAssertTrue(reachability.hasLocalNetworkConnection);
+
+    [reachability _triggerCallbackWithCellular:YES wifi:YES];
+    XCTAssertTrue(reachability.hasInternetConnection);
 }
 
 - (void)testDelegate
