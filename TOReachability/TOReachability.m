@@ -35,7 +35,6 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 @interface TOReachability ()
 
 @property (nonatomic, assign, readwrite) BOOL running;
-@property (nonatomic, strong, readwrite) NSHashTable *listeners;
 @property (nonatomic, assign, readwrite) TOReachabilityStatus status;
 @property (nonatomic, assign, readwrite) SCNetworkReachabilityRef reachabilityRef;
 @property (nonatomic, assign, readwrite) BOOL wifiOnly;
@@ -55,7 +54,9 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 // -------------------------------------------------------------
 
-@implementation TOReachability
+@implementation TOReachability {
+    NSHashTable *_listeners;
+}
 
 #pragma mark - Object Creation -
 
@@ -78,7 +79,6 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 + (instancetype)reachabilityForLocalNetworkConnection {
     // Create a zero address reachability object and configure it to only care about wifi
     TOReachability *reachability = [[self class] reachabilityForInternetConnection];
-
     reachability.wifiOnly = YES;
     return reachability;
 }
@@ -224,6 +224,12 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     }
 
     return status;
+}
+
+#pragma mark - Public Accessors -
+
+- (NSArray<id<TOReachabilityDelegate>> *)listeners {
+    return _listeners.allObjects;
 }
 
 #pragma mark - Internal Testing -
