@@ -86,14 +86,14 @@
     XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability WiFi Only"];
 
     reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
-        if (newStatus == TOReachabilityStatusAvailable) {
+        if (newStatus == TOReachabilityStatusNotAvailable) {
             [expection fulfill];
         }
     };
     [reachability start];
 
     // Force trigger the internal callback method, simulating cellular
-    [reachability _triggerCallbackWithCellular:NO wifi:YES];
+    [reachability _triggerCallbackWithCellular:YES wifi:NO];
 
     [self waitForExpectations:@[expection] timeout:1.0f];
 }
