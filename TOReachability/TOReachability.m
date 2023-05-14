@@ -35,12 +35,13 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 @interface TOReachability ()
 
 @property (nonatomic, assign, readwrite) BOOL running;
+@property (nonatomic, strong, readwrite) NSHashTable *listeners;
 @property (nonatomic, assign, readwrite) TOReachabilityStatus status;
-@property (nonatomic, assign) SCNetworkReachabilityRef reachabilityRef;
-@property (nonatomic, assign) BOOL wifiOnly;
+@property (nonatomic, assign, readwrite) SCNetworkReachabilityRef reachabilityRef;
+@property (nonatomic, assign, readwrite) BOOL wifiOnly;
 
-- (TOReachabilityStatus)fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags;
-- (void)broadcastStatusChange;
+- (TOReachabilityStatus)_fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags;
+- (void)_broadcastStatusChange;
 
 @end
 
@@ -48,8 +49,8 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 
 static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
     TOReachability *reachability = (__bridge TOReachability *)info;
-    reachability.status = [reachability fetchNewStatusWithFlags:flags];
-    [reachability broadcastStatusChange];
+    reachability.status = [reachability _fetchNewStatusWithFlags:flags];
+    [reachability _broadcastStatusChange];
 }
 
 // -------------------------------------------------------------
@@ -94,28 +95,42 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 - (void)dealloc {
     [self stop];
-
+    [_listeners removeAllObjects];
     if (_reachabilityRef != NULL) {
         CFRelease(_reachabilityRef);
     }
 }
 
-#pragma mark - Broadcast Status Updates -
+#pragma mark - Broadcast Status Handling -
 
-- (void)broadcastStatusChange {
-    // Call the delegate if one is available
-    if ([self.delegate respondsToSelector:@selector(reachability:didChangeStatusTo:)]) {
-        [self.delegate reachability:self didChangeStatusTo:self.status];
+- (void)addListener:(id<TOReachabilityDelegate>)listener {
+    if (_listeners == nil) {
+        _listeners = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    }
+    [_listeners addObject:listener];
+}
+
+- (void)removeListener:(id<TOReachabilityDelegate>)listener {
+    [_listeners removeObject:listener];
+}
+
+- (void)_broadcastStatusChange {
+    // Update the delegate with the status change
+    [_delegate reachability:self didChangeStatusTo:_status];
+
+    // Update any available listeners with the status change
+    for (id<TOReachabilityDelegate> listener in _listeners) {
+        [listener reachability:self didChangeStatusTo:_status];
     }
 
     // Call the block if one is available
-    if (self.statusChangedHandler) {
-        self.statusChangedHandler(self.status);
+    if (_statusChangedHandler) {
+        _statusChangedHandler(_status);
     }
 
     // Since an app could potentially have many reachability objects active at once, only broadcast when
     // the object has been explicitly configured to do so
-    if (self.broadcastsStatusChangeNotifications) {
+    if (_broadcastsStatusChangeNotifications) {
         [[NSNotificationCenter defaultCenter] postNotificationName:TOReachabilityStatusChangedNotification object:self];
     }
 }
@@ -123,7 +138,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 #pragma mark - Reachability Lifecycle -
 
 - (BOOL)start {
-    if (self.running) { return YES; }
+    if (_running) { return YES; }
 
     SCNetworkReachabilityContext context = {
         0, (__bridge void *)(self), NULL, NULL, NULL
@@ -141,25 +156,24 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     if (!result) { return NO; }
 
     // Ensure we don't start running again
-    self.running = YES;
+    _running = YES;
 
     // For the initial start, check the current network state and broadcast that
-    self.status = [self fetchNewStatusWithFlags:0];
-    [self broadcastStatusChange];
+    _status = [self _fetchNewStatusWithFlags:0];
+    [self _broadcastStatusChange];
 
     return result;
 }
 
 - (void)stop {
-    if (!self.running) { return; }
-
+    if (!_running) { return; }
     SCNetworkReachabilityUnscheduleFromRunLoop(_reachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-    self.running = NO;
+    _running = NO;
 }
 
 #pragma mark - Reachability State Tracking -
 
-- (TOReachabilityStatus)reachabilityStatusForFlags:(SCNetworkReachabilityFlags)flags {
+- (TOReachabilityStatus)_reachabilityStatusForFlags:(SCNetworkReachabilityFlags)flags {
     // Not reachable at all
     if ((flags & kSCNetworkReachabilityFlagsReachable) == 0) {
         return TOReachabilityStatusNotAvailable;
@@ -191,7 +205,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return status;
 }
 
-- (TOReachabilityStatus)fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags {
+- (TOReachabilityStatus)_fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags {
     NSAssert(_reachabilityRef != NULL, @"currentNetworkStatus called with NULL SCNetworkReachabilityRef");
 
     TOReachabilityStatus status = TOReachabilityStatusNotAvailable;
@@ -202,10 +216,10 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     }
 
     // Convert the provided flags into a practical status value
-    status = [self reachabilityStatusForFlags:flags];
+    status = [self _reachabilityStatusForFlags:flags];
 
     // Override cellular to "Unavailable" when only a non-cellular connection is required.
-    if (status == TOReachabilityStatusAvailableOnCellular && self.wifiOnly) {
+    if (status == TOReachabilityStatusAvailableOnCellular && _wifiOnly) {
         status = TOReachabilityStatusNotAvailable;
     }
 
