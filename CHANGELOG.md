@@ -10,6 +10,12 @@ x.y.z Release Notes (yyyy-MM-dd)
 ### Compatibility
 * None.
 
+1.1.0 Release Notes (2023-05-14)
+=============================================================
+
+### Enhancements
+* Added a 'listeners' mechanism to allow multiple objects to subscribe to a single reachability object, in contrast to a single delegate.
+
 1.0.1 Release Notes (2023-05-13)
 =============================================================
 

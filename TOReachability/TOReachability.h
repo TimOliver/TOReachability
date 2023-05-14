@@ -61,6 +61,9 @@ NS_SWIFT_NAME(Reachability)
 /// A delegate object that will be called whenever the reachability status changes.
 @property (nonatomic, weak) id<TOReachabilityDelegate> delegate;
 
+/// An array of all of the listener objects currently subscribed to this reachability object.
+@property (nonatomic, readonly) NSArray<id<TOReachabilityDelegate>> *listeners;
+
 /// As an alternative to the delegate, a block that will be called whenever the reachability status changes.
 @property (nonatomic, copy, nullable) void (^statusChangedHandler)(TOReachabilityStatus newStatus);
 
@@ -76,10 +79,17 @@ NS_SWIFT_NAME(Reachability)
 /// - Parameter hostName: The host name to target
 + (nullable instancetype)reachabilityWithHostName:(NSString *)hostName NS_SWIFT_NAME(init(hostName:));
 
-/// Start watching for reachability changes
+/// Subscribes another object as a listener for reachability changes. Useful for multiple objects instead of a single delegate.
+/// Listener objects are weakly held, and do not need to be manually removed.
+- (void)addListener:(id<TOReachabilityDelegate>)listener;
+
+/// Removes an object from being a listener of reachability changes.
+- (void)removeListener:(id<TOReachabilityDelegate>)listener;
+
+/// Start watching for reachability changes.
 - (BOOL)start;
 
-/// Stop watching for reachability changes
+/// Stop watching for reachability changes.
 - (void)stop;
 
 @end

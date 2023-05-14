@@ -13,7 +13,8 @@
 
 @interface TOReachability (Tests)
 
-- (TOReachabilityStatus)reachabilityStatusForFlags:(SCNetworkReachabilityFlags)flags;
+- (TOReachabilityStatus)_reachabilityStatusForFlags:(SCNetworkReachabilityFlags)flags;
+- (void)_triggerCellularCallback;
 
 @end
 
@@ -72,7 +73,7 @@
     [reachability start];
 
     // Force trigger the internal callback method, simulating cellular
-    [reachability performSelector:NSSelectorFromString(@"_triggerCellularCallback") withObject:nil afterDelay:0];
+    [reachability _triggerCellularCallback];
 
     [self waitForExpectations:@[expection] timeout:1.0f];
 }
@@ -95,7 +96,7 @@
     [reachability start];
 
     // Force trigger the internal callback method, simulating cellular
-    [reachability performSelector:NSSelectorFromString(@"_triggerCellularCallback") withObject:nil afterDelay:0];
+    [reachability _triggerCellularCallback];
 
     [self waitForExpectations:@[expection] timeout:1.0f];
 }
@@ -136,6 +137,28 @@
     [self waitForExpectations:@[self.delegateExpectation] timeout:1.0f];
 }
 
+- (void)testListeners
+{
+    TOReachability *reachability = [TOReachability reachabilityForLocalNetworkConnection];
+
+    XCTAssertNotNil(reachability);
+
+    self.delegateExpectation = [[XCTestExpectation alloc] initWithDescription:@"Listener successfully called"];
+
+    [reachability addListener:self];
+    XCTAssertEqual(reachability.listeners.count, 1);
+
+    [reachability removeListener:self];
+    XCTAssertEqual(reachability.listeners.count, 0);
+
+    [reachability addListener:self];
+    XCTAssertEqual(reachability.listeners.count, 1);
+
+    [reachability start];
+
+    [self waitForExpectations:@[self.delegateExpectation] timeout:1.0f];
+}
+
 - (void)reachability:(TOReachability *)reachability didChangeStatusTo:(TOReachabilityStatus)newStatus
 {
     [self.delegateExpectation fulfill];
@@ -146,16 +169,16 @@
 
     XCTAssertNotNil(reachability);
 
-    XCTAssertEqual([reachability reachabilityStatusForFlags:0], TOReachabilityStatusNotAvailable);
+    XCTAssertEqual([reachability _reachabilityStatusForFlags:0], TOReachabilityStatusNotAvailable);
 
     SCNetworkReachabilityFlags reachableFlags = kSCNetworkReachabilityFlagsReachable;
-    XCTAssertEqual([reachability reachabilityStatusForFlags:reachableFlags], TOReachabilityStatusAvailable);
+    XCTAssertEqual([reachability _reachabilityStatusForFlags:reachableFlags], TOReachabilityStatusAvailable);
 
     SCNetworkReachabilityFlags reachableAndOnDemandFlags = kSCNetworkReachabilityFlagsReachable | kSCNetworkReachabilityFlagsConnectionOnDemand;
-    XCTAssertEqual([reachability reachabilityStatusForFlags:reachableAndOnDemandFlags], TOReachabilityStatusAvailable);
+    XCTAssertEqual([reachability _reachabilityStatusForFlags:reachableAndOnDemandFlags], TOReachabilityStatusAvailable);
 
     SCNetworkReachabilityFlags reachableAndOnCellularFlags = kSCNetworkReachabilityFlagsReachable | kSCNetworkReachabilityFlagsIsWWAN;
-    XCTAssertEqual([reachability reachabilityStatusForFlags:reachableAndOnCellularFlags], TOReachabilityStatusAvailableOnCellular);
+    XCTAssertEqual([reachability _reachabilityStatusForFlags:reachableAndOnCellularFlags], TOReachabilityStatusAvailableOnCellular);
 }
 
 @end
