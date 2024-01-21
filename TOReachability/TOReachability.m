@@ -106,7 +106,8 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 }
 
 - (void)dealloc {
-    [self stopListening];
+    SCNetworkReachabilitySetCallback(_reachabilityRef, NULL, NULL);
+    SCNetworkReachabilitySetDispatchQueue(_reachabilityRef, NULL);
     [_listeners removeAllObjects];
     if (_reachabilityRef != NULL) {
         CFRelease(_reachabilityRef);

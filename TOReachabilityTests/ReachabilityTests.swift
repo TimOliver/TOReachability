@@ -17,14 +17,14 @@ class ReachabilityTests: XCTestCase {
 
     func testSwiftSetupAndRun() throws {
         let expectation = XCTestExpectation(description: "Set up and run")
-        guard let reachability = Reachability.forInternetConnection() else {
+        guard let reachability = Reachability() else {
             throw ReachabilityError.objectWasNil
         }
 
-        reachability.statusChangedHandler = {newStatus in
+        reachability.statusChangedHandler = { _, _, _ in
             expectation.fulfill()
         }
-        reachability.start()
+        reachability.startListening()
 
         wait(for: [expectation], timeout: 1.0)
 
@@ -32,15 +32,15 @@ class ReachabilityTests: XCTestCase {
     }
 
     func testNotificationBroadcast() throws {
-        guard let reachability = Reachability.forInternetConnection() else {
+        guard let reachability = Reachability() else {
             throw ReachabilityError.objectWasNil
         }
 
-        reachability.broadcastsStatusChangeNotifications = true
+        reachability.broadcastsNotifications = true
         XCTAssertNotNil(reachability)
 
         let expectation = XCTNSNotificationExpectation(name: NSNotification.Name(rawValue: Reachability.StatusChangedNotification), object: reachability)
-        reachability.start()
+        reachability.startListening()
 
         wait(for: [expectation], timeout: 1.0)
     }

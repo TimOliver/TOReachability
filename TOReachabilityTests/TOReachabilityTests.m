@@ -30,14 +30,16 @@
 {
     XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Set up and run"];
 
-    TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
+    TOReachability *reachability = [TOReachability new];
 
     XCTAssertNotNil(reachability);
 
-    reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
+    reachability.statusChangedHandler = ^(TOReachability *reachability,
+                                          TOReachabilityStatus newStatus,
+                                          TOReachabilityStatus oldStatus) {
         [expection fulfill];
     };
-    [reachability start];
+    [reachability startListening];
 
     [self waitForExpectations:@[expection] timeout:1.0f];
 
@@ -46,30 +48,30 @@
 
 - (void)testNotificationBroadcast
 {
-    TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
+    TOReachability *reachability = [TOReachability new];
 
-    reachability.broadcastsStatusChangeNotifications = YES;
+    reachability.broadcastsNotifications = YES;
     XCTAssertNotNil(reachability);
 
     XCTNSNotificationExpectation *expectation = [[XCTNSNotificationExpectation alloc] initWithName:TOReachabilityStatusChangedNotification object:reachability];
-    [reachability start];
+    [reachability startListening];
 
     [self waitForExpectations:@[expectation] timeout:1.0f];
 }
 
 - (void)testCellularConnection
 {
-    TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
+    TOReachability *reachability = [TOReachability new];
     XCTAssertNotNil(reachability);
 
     XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability Dedicated Stable Cellular"];
 
-    reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
-        if (newStatus == TOReachabilityStatusAvailableOnCellular) {
-            [expection fulfill];
-        }
+    reachability.statusChangedHandler = ^(TOReachability *reachability,
+                                          TOReachabilityStatus newStatus,
+                                          TOReachabilityStatus oldStatus) {
+        [expection fulfill];
     };
-    [reachability start];
+    [reachability startListening];
 
     // Force trigger the internal callback method, simulating cellular
     [reachability _triggerCallbackWithCellular:YES wifi:NO];
@@ -79,18 +81,21 @@
 
 - (void)testWiFiOnlyConnection
 {
-    TOReachability *reachability = [TOReachability reachabilityForLocalNetworkConnection];
+    TOReachability *reachability = [TOReachability new];
+    reachability.requiresLocalNetworkConnection = YES;
     XCTAssertNotNil(reachability);
 
     // This test will be a failure if triggering a simulated cellular signal changes the status to cellular
     XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability WiFi Only"];
 
-    reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
+    reachability.statusChangedHandler = ^(TOReachability *reachability,
+                                          TOReachabilityStatus newStatus,
+                                          TOReachabilityStatus oldStatus) {
         if (newStatus == TOReachabilityStatusNotAvailable) {
             [expection fulfill];
         }
     };
-    [reachability start];
+    [reachability startListening];
 
     // Force trigger the internal callback method, simulating cellular
     [reachability _triggerCallbackWithCellular:YES wifi:NO];
@@ -100,18 +105,20 @@
 
 - (void)testHostNameConnection
 {
-    TOReachability *reachability = [TOReachability reachabilityWithHostName:@"www.timoliver.co"];
+    TOReachability *reachability = [[TOReachability alloc] initWithHostName:@"www.tim.dev"];
     XCTAssertNotNil(reachability);
 
     // This test will be a failure if triggering a simulated cellular signal changes the status to cellular
     XCTestExpectation *expection = [[XCTestExpectation alloc] initWithDescription:@"Reachability Host Name Only"];
 
-    reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
+    reachability.statusChangedHandler = ^(TOReachability *reachability,
+                                          TOReachabilityStatus newStatus,
+                                          TOReachabilityStatus oldStatus) {
         if (newStatus == TOReachabilityStatusAvailableOnCellular) {
             [expection fulfill];
         }
     };
-    [reachability start];
+    [reachability startListening];
 
     // Force trigger the internal callback method, simulating cellular
     [reachability _triggerCallbackWithCellular:YES wifi:NO];
@@ -120,36 +127,38 @@
 }
 
 - (void)testConvenienceProperties {
-    TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
+    TOReachability *reachability = [TOReachability new];
     XCTAssertNotNil(reachability);
 
     [reachability _triggerCallbackWithCellular:YES wifi:NO];
-    XCTAssertTrue(reachability.hasCellularConnection);
+    XCTAssertTrue(reachability.reachableOnCellular);
 
     [reachability _triggerCallbackWithCellular:NO wifi:YES];
-    XCTAssertTrue(reachability.hasLocalNetworkConnection);
+    XCTAssertTrue(reachability.reachableOnLocalNetwork);
 
     [reachability _triggerCallbackWithCellular:YES wifi:YES];
-    XCTAssertTrue(reachability.hasInternetConnection);
+    XCTAssertTrue(reachability.reachable);
 }
 
 - (void)testDelegate
 {
-    TOReachability *reachability = [TOReachability reachabilityForLocalNetworkConnection];
+    TOReachability *reachability = [[TOReachability alloc] init];
+    reachability.requiresLocalNetworkConnection = YES;
 
     XCTAssertNotNil(reachability);
 
     self.delegateExpectation = [[XCTestExpectation alloc] initWithDescription:@"Delegate successfully called"];
 
     reachability.delegate = self;
-    [reachability start];
+    [reachability startListening];
 
     [self waitForExpectations:@[self.delegateExpectation] timeout:1.0f];
 }
 
 - (void)testListeners
 {
-    TOReachability *reachability = [TOReachability reachabilityForLocalNetworkConnection];
+    TOReachability *reachability = [[TOReachability alloc] init];
+    reachability.requiresLocalNetworkConnection = YES;
 
     XCTAssertNotNil(reachability);
 
@@ -164,31 +173,14 @@
     [reachability addListener:self];
     XCTAssertEqual(reachability.listeners.count, 1);
 
-    [reachability start];
+    [reachability startListening];
 
     [self waitForExpectations:@[self.delegateExpectation] timeout:1.0f];
 }
 
-- (void)reachability:(TOReachability *)reachability didChangeStatusTo:(TOReachabilityStatus)newStatus
+- (void)reachability:(TOReachability *)reachability didChangeStatusTo:(TOReachabilityStatus)status fromStatus:(TOReachabilityStatus)fromStatus
 {
     [self.delegateExpectation fulfill];
-}
-
-- (void)testReachabilityStatusForFlags {
-    TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
-
-    XCTAssertNotNil(reachability);
-
-    XCTAssertEqual([reachability _reachabilityStatusForFlags:0], TOReachabilityStatusNotAvailable);
-
-    SCNetworkReachabilityFlags reachableFlags = kSCNetworkReachabilityFlagsReachable;
-    XCTAssertEqual([reachability _reachabilityStatusForFlags:reachableFlags], TOReachabilityStatusAvailable);
-
-    SCNetworkReachabilityFlags reachableAndOnDemandFlags = kSCNetworkReachabilityFlagsReachable | kSCNetworkReachabilityFlagsConnectionOnDemand;
-    XCTAssertEqual([reachability _reachabilityStatusForFlags:reachableAndOnDemandFlags], TOReachabilityStatusAvailable);
-
-    SCNetworkReachabilityFlags reachableAndOnCellularFlags = kSCNetworkReachabilityFlagsReachable | kSCNetworkReachabilityFlagsIsWWAN;
-    XCTAssertEqual([reachability _reachabilityStatusForFlags:reachableAndOnCellularFlags], TOReachabilityStatusAvailableOnCellular);
 }
 
 @end
