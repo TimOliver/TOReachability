@@ -64,7 +64,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     static dispatch_once_t onceToken;
     static TOReachability *_sharedReachabilty;
     dispatch_once(&onceToken, ^{
-        _sharedReachabilty = [TOReachability reachabilityForInternetConnection];
+        _sharedReachabilty = [TOReachability new];
         _sharedReachabilty.broadcastsNotifications = YES;
     });
     return _sharedReachabilty;

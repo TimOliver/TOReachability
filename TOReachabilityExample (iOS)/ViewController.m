@@ -23,7 +23,7 @@
 
     // Set up an configure a new reachability instance
     __weak typeof(self) weakSelf = self;
-    self.reachability = [TOReachability reachabilityForInternetConnection];
+    self.reachability = [[TOReachability alloc] init];
     self.reachability.statusChangedHandler = ^(TOReachability *reachability, 
                                                TOReachabilityStatus newStatus,
                                                TOReachabilityStatus oldStatus) {
