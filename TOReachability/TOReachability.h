@@ -64,18 +64,18 @@ NS_SWIFT_NAME(Reachability)
 @property (nonatomic, readonly) BOOL reachable NS_SWIFT_NAME(isReachable);
 
 /// A convenience property for checking there is an active local connection (ie, only a WiFi or Ethernet connection)
-@property (nonatomic, readonly) BOOL hasLocalNetworkConnection;
+@property (nonatomic, readonly) BOOL reachableOnLocalNetwork NS_SWIFT_NAME(isReachableOnLocalNetowrk);
 
 /// A convenience property for checking there is an active cellular connection, but isn't on Ethernet or WiFi.
-@property (nonatomic, readonly) BOOL hasCellularConnection;
+@property (nonatomic, readonly) BOOL reachableOnCellular NS_SWIFT_NAME(isReachableOnCellular);
 
 /// A delegate object that will be called whenever the reachability status changes.
 @property (nonatomic, weak) id<TOReachabilityDelegate> delegate;
 
 /// As an alternative to the delegate, a block that will be called whenever the reachability status changes.
 @property (nonatomic, copy, nullable) void (^statusChangedHandler)(TOReachability *reachability, 
-                                                                   TOReachabilityStatus newStatus,
-                                                                   TOReachabilityStatus oldStatus);
+                                                                   TOReachabilityStatus status,
+                                                                   TOReachabilityStatus fromStatus);
 
 /// An array of all of the listener objects currently subscribed to this reachability object.
 @property (nonatomic, readonly) NSArray<id<TOReachabilityDelegate>> *listeners;
@@ -90,15 +90,15 @@ NS_SWIFT_NAME(Reachability)
 
 /// A singleton reachability object configured to detect whenever an active internet connection is present.
 /// This object will last for the entire app session, and can be used a central source for broadcast notifications.
-+ (nullable instancetype)defaultReachability NS_SWIFT_NAME(default());
++ (nullable instancetype)sharedReachability NS_SWIFT_NAME(shared());
 
 /// Creates a new reachability object configured to detect whenever an active internet connection is present.
 /// (Whether on a cellular service, or on a local WiFi network)
-+ (nullable instancetype)reachabilityForInternetConnection NS_SWIFT_NAME(forInternetConnection());
+- (nullable instancetype)init;
 
 /// Creates a new reachability object configured to detect that there is an active internet connection to an online host name.
 /// - Parameter hostName: The host name to target (must not include the scheme, eg 'https')
-+ (nullable instancetype)reachabilityWithHostName:(NSString *)hostName NS_SWIFT_NAME(init(hostName:));
+- (nullable instancetype)initWithHostName:(NSString *)hostName NS_SWIFT_NAME(init(hostName:));
 
 /// Subscribes another object as a listener for reachability changes. Useful for multiple objects instead of a single delegate.
 /// Listener objects are weakly held, and do not need to be manually removed.

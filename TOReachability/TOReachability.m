@@ -36,6 +36,7 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 // -------------------------------------------------------------
 
 @interface TOReachability ()
+@property (nonatomic, readonly) SCNetworkReachabilityFlags flags;
 - (void)_flagsDidChange:(SCNetworkReachabilityFlags)flags TO_REACHABILITY_OBJC_DIRECT;
 @end
 
@@ -54,21 +55,22 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     NSHashTable *_listeners;
     SCNetworkReachabilityRef _reachabilityRef;
     os_unfair_lock _lock;
+    dispatch_queue_t _queue;
 }
 
 #pragma mark - Object Creation -
 
-+ (instancetype)defaultReachability {
++ (instancetype)sharedReachability {
     static dispatch_once_t onceToken;
-    static TOReachability *_defaultReachabilty;
+    static TOReachability *_sharedReachabilty;
     dispatch_once(&onceToken, ^{
-        _defaultReachabilty = [TOReachability reachabilityForInternetConnection];
-        _defaultReachabilty.broadcastsNotifications = YES;
+        _sharedReachabilty = [TOReachability reachabilityForInternetConnection];
+        _sharedReachabilty.broadcastsNotifications = YES;
     });
-    return _defaultReachabilty;
+    return _sharedReachabilty;
 }
 
-+ (instancetype)reachabilityForInternetConnection {
+- (nullable instancetype)init {
     struct sockaddr_in zeroAddress;
     bzero(&zeroAddress, sizeof(zeroAddress));
     zeroAddress.sin_len = sizeof(zeroAddress);
@@ -78,20 +80,18 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     SCNetworkReachabilityRef reachabilityRef = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault,
                                                                                       (const struct sockaddr *)&zeroAddress);
     if (reachabilityRef == NULL) { return nil; }
-
-    TOReachability *reachability = [[TOReachability alloc] initWithReachabilityRef:reachabilityRef];
+    if (self = [self initWithReachabilityRef:reachabilityRef]) { }
     CFRelease(reachabilityRef);
-    return reachability;
+    return self;
 }
 
-+ (instancetype)reachabilityWithHostName:(NSString *)hostName {
+- (nullable instancetype)initWithHostName:(NSString *)hostName {
     // Create a reachability object wuth the provided host name
     SCNetworkReachabilityRef reachabilityRef = SCNetworkReachabilityCreateWithName(NULL, hostName.UTF8String);
     if (reachabilityRef == NULL) { return nil; }
-
-    TOReachability *reachability = [[TOReachability alloc] initWithReachabilityRef:reachabilityRef];
+    if (self = [self initWithReachabilityRef:reachabilityRef]) { }
     CFRelease(reachabilityRef);
-    return reachability;
+    return self;
 }
 
 - (instancetype)initWithReachabilityRef:(SCNetworkReachabilityRef)reachabilityRef {
@@ -99,7 +99,8 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
         _lock = OS_UNFAIR_LOCK_INIT;
         _reachabilityRef = reachabilityRef;
         _running = NO;
-        _status = TOReachabilityStatusNotAvailable;;
+        _status = TOReachabilityStatusNotAvailable;
+        CFRetain(_reachabilityRef);
     }
     return self;
 }
@@ -132,36 +133,43 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 }
 
 - (BOOL)startListeningOnQueue:(dispatch_queue_t)queue {
-    if (_running) { return YES; }
+    [self stopListening];
 
     SCNetworkReachabilityContext context = {
         0, (__bridge void *)(self), NULL, NULL, NULL
     };
 
-    BOOL result = NO;
-
-    if (SCNetworkReachabilitySetCallback(_reachabilityRef, TOReachabilityCallback, &context)) {
-        if (SCNetworkReachabilityScheduleWithRunLoop(_reachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode)) {
-            result = YES;
-        }
+    // Start the queue running
+    const BOOL callbackWasSet = SCNetworkReachabilitySetCallback(_reachabilityRef, TOReachabilityCallback, &context);
+    const BOOL queueWasSet = SCNetworkReachabilitySetDispatchQueue(_reachabilityRef, queue);
+    if (!callbackWasSet || !queueWasSet) {
+        return NO;
     }
 
-    // Escape if starting the run loop failed
-    if (!result) { return NO; }
+    // Update our internal state that we're running
+    [self _performWithLock:^(TOReachability *strongSelf) {
+        strongSelf->_running = YES;
+        strongSelf->_queue = queue;
 
-    // Ensure we don't start running again
-    _running = YES;
+        // Perform an initial update in case one isn't called automatically
+        dispatch_async(strongSelf->_queue, ^{
+            SCNetworkReachabilityFlags flags = 0;
+            SCNetworkReachabilityGetFlags(strongSelf->_reachabilityRef, &flags);
+            [strongSelf _flagsDidChange:flags];
+        });
+    }];
 
-    // For the initial start, check the current network state and broadcast that
-    _status = TOReachabilityStatusNotAvailable;
-
-    return result;
+    return YES;
 }
 
 - (void)stopListening {
-    if (!_running) { return; }
-    SCNetworkReachabilityUnscheduleFromRunLoop(_reachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-    _running = NO;
+    SCNetworkReachabilitySetCallback(_reachabilityRef, NULL, NULL);
+    SCNetworkReachabilitySetDispatchQueue(_reachabilityRef, NULL);
+    [self _performWithLock:^(TOReachability *strongSelf) {
+        strongSelf->_running = NO;
+        strongSelf->_queue = NULL;
+        strongSelf->_status = TOReachabilityStatusNotAvailable;
+    }];
 }
 
 #pragma mark - Reachability State Tracking -
@@ -195,27 +203,31 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 }
 
 - (void)_flagsDidChange:(SCNetworkReachabilityFlags)flags TO_REACHABILITY_OBJC_DIRECT {
-    NSAssert(_reachabilityRef != NULL, @"flags change called with NULL SCNetworkReachabilityRef");
-
     // If provided flags were 0, try and refresh them
     if (flags == 0) {
         SCNetworkReachabilityGetFlags(_reachabilityRef, &flags);
     }
 
-    TOReachabilityStatus fromStatus = _status;
-    _status = [self _reachabilityStatusForFlags:flags];
+    // Update our internal status state
+    __block TOReachabilityStatus fromStatus = 0;
+    __block TOReachabilityStatus toStatus = 0;
+    [self _performWithLock:^(TOReachability *strongSelf) {
+        fromStatus = strongSelf->_status;
+        toStatus = [self _reachabilityStatusForFlags:flags];
+        strongSelf->_status = toStatus;
+    }];
 
     // Update the delegate with the status change
-    [_delegate reachability:self didChangeStatusTo:_status fromStatus:fromStatus];
+    [_delegate reachability:self didChangeStatusTo:toStatus fromStatus:fromStatus];
 
     // Update any available listeners with the status change
     for (id<TOReachabilityDelegate> listener in _listeners) {
-        [listener reachability:self didChangeStatusTo:_status fromStatus:fromStatus];
+        [listener reachability:self didChangeStatusTo:toStatus fromStatus:fromStatus];
     }
 
     // Call the block if one is available
     if (_statusChangedHandler) {
-        _statusChangedHandler(self, _status, fromStatus);
+        _statusChangedHandler(self, toStatus, fromStatus);
     }
 
     // Broadcast a notification if configured to do so
@@ -230,25 +242,41 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return _listeners.allObjects;
 }
 
+- (TOReachabilityStatus)status {
+    __block TOReachabilityStatus status = 0;
+    [self _performWithLock:^(TOReachability *strongSelf) {
+        status = strongSelf->_status;
+    }];
+    return status;
+}
+
 - (BOOL)reachable {
-    return (_status == TOReachabilityStatusAvailable ||
-            _status == TOReachabilityStatusAvailableOnCellular);
+    const TOReachabilityStatus status = self.status;
+    return (status == TOReachabilityStatusAvailable ||
+            status == TOReachabilityStatusAvailableOnCellular);
 }
 
-- (BOOL)hasLocalNetworkConnection {
-    return _status == TOReachabilityStatusAvailable;
+- (BOOL)reachableOnLocalNetwork {
+    const TOReachabilityStatus status = self.status;
+    return status == TOReachabilityStatusAvailable;
 }
 
-- (BOOL)hasCellularConnection {
-    return _status == TOReachabilityStatusAvailableOnCellular;
+- (BOOL)reachableOnCellular {
+    const TOReachabilityStatus status = self.status;
+    return status == TOReachabilityStatusAvailableOnCellular;
 }
 
 #pragma mark - Thread Safety -
 
-- (void)_performWithLock:(void (^)(__weak TOReachability *weakSelf))block TO_REACHABILITY_OBJC_DIRECT {
+- (void)_performWithLock:(void (^)(TOReachability *strongSelf))block TO_REACHABILITY_OBJC_DIRECT {
     os_unfair_lock_lock(&_lock);
     __weak __typeof(self) weakSelf = self;
-    block(weakSelf);
+    void (^selfBlock)(void) = ^{
+        __strong __typeof(weakSelf) strongSelf = weakSelf;
+        if (strongSelf == nil) { return; }
+        block(strongSelf);
+    };
+    selfBlock();
     os_unfair_lock_unlock(&_lock);
 }
 
