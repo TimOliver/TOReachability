@@ -179,35 +179,30 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 #pragma mark - Reachability State Tracking -
 
 - (TOReachabilityStatus)_reachabilityStatusForFlags:(SCNetworkReachabilityFlags)flags {
-    // Not reachable at all
-    if ((flags & kSCNetworkReachabilityFlagsReachable) == 0) {
+    // Parse the current flags to determine our current connectivity state
+    // This is the same logic from Apple's Reachability example, but derived from Alamofire's
+    // reachability manager object which condenses it down to a much more succinct check.
+    const BOOL isReachable = (flags & kSCNetworkReachabilityFlagsReachable) != 0;
+    const BOOL isConnectionRequired = (flags & kSCNetworkReachabilityFlagsConnectionRequired) != 0;
+    const BOOL canConnectAutomatically = (flags & kSCNetworkReachabilityFlagsConnectionOnDemand) != 0 ||
+                                         (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0;
+    const BOOL canConnectWithoutUserInteraction = canConnectAutomatically &&
+                                                    (flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0;
+    const BOOL isActuallyReachable = isReachable && (!isConnectionRequired || canConnectWithoutUserInteraction);
+
+    // Only bother with the WWAN check on devices with embedded celluar modems (ie iPhone and iPad)
+#if (TARGET_OS_OSX || TARGET_OS_MACCATALYST || TARGET_OS_TV || TARGET_OS_VISION)
+    const BOOL isWWAN = NO;
+#else
+    const BOOL isWWAN = (flags & kSCNetworkReachabilityFlagsIsWWAN) != 0;
+#endif
+
+    // Check if we're properly reachable, or if we're on WWAN, but we require a local connection
+    if (!isActuallyReachable || (isWWAN && _requiresLocalNetworkConnection)) {
         return TOReachabilityStatusNotAvailable;
     }
 
-    TOReachabilityStatus status = TOReachabilityStatusNotAvailable;
-
-    // If the target host is reachable and no connection is required then we'll assume (for now) that you're on Wi-Fi...
-    if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0) {
-        status = TOReachabilityStatusAvailable;
-    }
-
-    // and the connection is on-demand (or on-traffic) if the calling application is using the CFSocketStream or higher APIs...
-    if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand) != 0) ||
-         (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0)) {
-        //... and no [user] intervention is needed...
-        if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0) {
-            status = TOReachabilityStatusAvailable;
-        }
-    }
-
-#if !TARGET_OS_OSX
-    // ... but WWAN connections are OK if the calling application is using the CFNetwork APIs.
-    if ((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN) {
-        status = TOReachabilityStatusAvailableOnCellular;
-    }
-#endif
-
-    return status;
+    return isWWAN ? TOReachabilityStatusAvailableOnCellular : TOReachabilityStatusAvailable;
 }
 
 - (TOReachabilityStatus)_fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags {
