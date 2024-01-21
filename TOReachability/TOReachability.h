@@ -82,16 +82,16 @@ NS_SWIFT_NAME(Reachability)
 /// When YES, will broadcast an NSNotification whenever the status changes. Useful for an app-wide global object. (Defualt is NO)
 @property (nonatomic, assign) BOOL broadcastsStatusChangeNotifications;
 
+/// For cases where local network access is exclusively required, setting this to YES will ignore
+/// all cellular-related status changes. (Default is NO)
+@property (nonatomic, assign, readwrite) BOOL requiresLocalNetworkConnection;
+
 /// Creates a new reachability object configured to detect whenever an active internet connection is present
 /// (Whether on a cellular service, or on a local WiFi network)
 + (nullable instancetype)reachabilityForInternetConnection NS_SWIFT_NAME(forInternetConnection());
 
-/// Creates a new reachability object configured to detect when connected to a local network (via WiFi or Ethernet) and will disregard cellular status.
-/// Use this configuration for Bonjour, or other operations that require communication between two devices on the same network.
-+ (nullable instancetype)reachabilityForLocalNetworkConnection NS_SWIFT_NAME(forLocalNetworkConnection());
-
 /// Creates a new reachability object configured to detect that there is an active internet connection to an online host name.
-/// - Parameter hostName: The host name to target
+/// - Parameter hostName: The host name to target (must not include the scheme, eg 'https')
 + (nullable instancetype)reachabilityWithHostName:(NSString *)hostName NS_SWIFT_NAME(init(hostName:));
 
 /// Subscribes another object as a listener for reachability changes. Useful for multiple objects instead of a single delegate.

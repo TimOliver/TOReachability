@@ -37,7 +37,6 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 @property (nonatomic, assign, readwrite) BOOL running;
 @property (nonatomic, assign, readwrite) TOReachabilityStatus status;
 @property (nonatomic, assign, readwrite) SCNetworkReachabilityRef reachabilityRef;
-@property (nonatomic, assign, readwrite) BOOL wifiOnly;
 
 - (TOReachabilityStatus)_fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags;
 - (void)_broadcastStatusChangeFromStatus:(TOReachabilityStatus)fromStatus;
@@ -74,13 +73,6 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
     TOReachability *reachability = [[TOReachability alloc] init];
     reachability.reachabilityRef = reachabilityRef;
-    return reachability;
-}
-
-+ (instancetype)reachabilityForLocalNetworkConnection {
-    // Create a zero address reachability object and configure it to only care about wifi
-    TOReachability *reachability = [[self class] reachabilityForInternetConnection];
-    reachability.wifiOnly = YES;
     return reachability;
 }
 
@@ -220,7 +212,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     status = [self _reachabilityStatusForFlags:flags];
 
     // Override cellular to "Unavailable" when only a non-cellular connection is required.
-    if (status == TOReachabilityStatusAvailableOnCellular && _wifiOnly) {
+    if (status == TOReachabilityStatusAvailableOnCellular && _requiresLocalNetworkConnection) {
         status = TOReachabilityStatusNotAvailable;
     }
 
