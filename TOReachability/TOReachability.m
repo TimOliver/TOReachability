@@ -43,7 +43,7 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 // -------------------------------------------------------------
 
 static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
-    TOReachability *reachability = (__bridge TOReachability *)info;
+    TOReachability *const reachability = (__bridge TOReachability *)info;
     [reachability _flagsDidChange:flags];
 }
 
@@ -77,7 +77,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     zeroAddress.sin_family = AF_INET;
 
     // Create a new reachability reference using a zero address
-    SCNetworkReachabilityRef reachabilityRef = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault,
+    const SCNetworkReachabilityRef reachabilityRef = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault,
                                                                                       (const struct sockaddr *)&zeroAddress);
     if (reachabilityRef == NULL) { return nil; }
     if (self = [self initWithReachabilityRef:reachabilityRef]) { }
@@ -87,7 +87,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 - (nullable instancetype)initWithHostName:(NSString *)hostName {
     // Create a reachability object wuth the provided host name
-    SCNetworkReachabilityRef reachabilityRef = SCNetworkReachabilityCreateWithName(NULL, hostName.UTF8String);
+    const SCNetworkReachabilityRef reachabilityRef = SCNetworkReachabilityCreateWithName(NULL, hostName.UTF8String);
     if (reachabilityRef == NULL) { return nil; }
     if (self = [self initWithReachabilityRef:reachabilityRef]) { }
     CFRelease(reachabilityRef);
@@ -116,14 +116,18 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 #pragma mark - Broadcast Status Handling -
 
 - (void)addListener:(id<TOReachabilityDelegate>)listener {
-    if (_listeners == nil) {
-        _listeners = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-    }
-    [_listeners addObject:listener];
+    [self _performWithLock:^(TOReachability *strongSelf) {
+        if (strongSelf->_listeners == nil) {
+            strongSelf->_listeners = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+        }
+        [strongSelf->_listeners addObject:listener];
+    }];
 }
 
 - (void)removeListener:(id<TOReachabilityDelegate>)listener {
-    [_listeners removeObject:listener];
+    [self _performWithLock:^(TOReachability *strongSelf) {
+        [strongSelf->_listeners removeObject:listener];
+    }];
 }
 
 #pragma mark - Reachability Lifecycle -
