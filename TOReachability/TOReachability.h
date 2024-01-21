@@ -79,14 +79,19 @@ NS_SWIFT_NAME(Reachability)
 /// An array of all of the listener objects currently subscribed to this reachability object.
 @property (nonatomic, readonly) NSArray<id<TOReachabilityDelegate>> *listeners;
 
-/// When YES, will broadcast an NSNotification whenever the status changes. Useful for an app-wide global object. (Defualt is NO)
-@property (nonatomic, assign) BOOL broadcastsStatusChangeNotifications;
+/// When YES, will broadcast an NSNotification whenever the status changes.
+/// (By default, this is YES for the singleton instance, but NO for every other instance)
+@property (nonatomic, assign) BOOL broadcastsNotifications;
 
 /// For cases where local network access is exclusively required, setting this to YES will ignore
 /// all cellular-related status changes. (Default is NO)
 @property (nonatomic, assign, readwrite) BOOL requiresLocalNetworkConnection;
 
-/// Creates a new reachability object configured to detect whenever an active internet connection is present
+/// A singleton reachability object configured to detect whenever an active internet connection is present.
+/// This object will last for the entire app session, and can be used a central source for broadcast notifications.
++ (nullable instancetype)defaultReachability NS_SWIFT_NAME(default());
+
+/// Creates a new reachability object configured to detect whenever an active internet connection is present.
 /// (Whether on a cellular service, or on a local WiFi network)
 + (nullable instancetype)reachabilityForInternetConnection NS_SWIFT_NAME(forInternetConnection());
 

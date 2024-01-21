@@ -37,6 +37,7 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 @property (nonatomic, assign, readwrite) BOOL running;
 @property (nonatomic, assign, readwrite) TOReachabilityStatus status;
 @property (nonatomic, assign, readwrite) SCNetworkReachabilityRef reachabilityRef;
+@property (nonatomic, assign, readwrite) BOOL isSingleton;
 
 - (TOReachabilityStatus)_fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags;
 - (void)_broadcastStatusChangeFromStatus:(TOReachabilityStatus)fromStatus;
@@ -59,6 +60,17 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 }
 
 #pragma mark - Object Creation -
+
++ (instancetype)defaultReachability {
+    static dispatch_once_t onceToken;
+    static TOReachability *_defaultReachabilty;
+    dispatch_once(&onceToken, ^{
+        _defaultReachabilty = [TOReachability reachabilityForInternetConnection];
+        _defaultReachabilty.isSingleton = YES;
+        _defaultReachabilty.broadcastsNotifications = YES;
+    });
+    return _defaultReachabilty;
+}
 
 + (instancetype)reachabilityForInternetConnection {
     struct sockaddr_in zeroAddress;
@@ -123,7 +135,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
     // Since an app could potentially have many reachability objects active at once, only broadcast when
     // the object has been explicitly configured to do so
-    if (_broadcastsStatusChangeNotifications) {
+    if (_broadcastsNotifications) {
         [[NSNotificationCenter defaultCenter] postNotificationName:TOReachabilityStatusChangedNotification object:self];
     }
 }
