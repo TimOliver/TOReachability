@@ -1,7 +1,7 @@
 //
 //  TOReachability.m
 //
-//  Copyright 2019-2023 Timothy Oliver. All rights reserved.
+//  Copyright 2019-2024 Timothy Oliver. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to
@@ -27,6 +27,8 @@
 
 #import "TOReachability.h"
 
+#define TO_REACHABILITY_OBJC_DIRECT __attribute__((objc_direct))
+
 // -------------------------------------------------------------
 
 NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChangedNotification";
@@ -34,31 +36,24 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 // -------------------------------------------------------------
 
 @interface TOReachability ()
-
-@property (nonatomic, assign, readwrite) BOOL running;
-@property (nonatomic, assign, readwrite) TOReachabilityStatus status;
-@property (nonatomic, assign, readwrite) SCNetworkReachabilityRef reachabilityRef;
-@property (nonatomic, assign, readwrite) BOOL isSingleton;
-@property (nonatomic, assign, readwrite) os_unfair_lock lock;
-
-- (TOReachabilityStatus)_fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags;
-- (void)_broadcastStatusChangeFromStatus:(TOReachabilityStatus)fromStatus;
-
+- (void)_flagsDidChange:(SCNetworkReachabilityFlags)flags TO_REACHABILITY_OBJC_DIRECT;
 @end
 
 // -------------------------------------------------------------
 
 static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
     TOReachability *reachability = (__bridge TOReachability *)info;
-    const TOReachabilityStatus fromStatus = reachability.status;
-    reachability.status = [reachability _fetchNewStatusWithFlags:flags];
-    [reachability _broadcastStatusChangeFromStatus:fromStatus];
+    [reachability _flagsDidChange:flags];
 }
 
 // -------------------------------------------------------------
 
 @implementation TOReachability {
+    BOOL _running;
+    TOReachabilityStatus _status;
     NSHashTable *_listeners;
+    SCNetworkReachabilityRef _reachabilityRef;
+    os_unfair_lock _lock;
 }
 
 #pragma mark - Object Creation -
@@ -68,7 +63,6 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     static TOReachability *_defaultReachabilty;
     dispatch_once(&onceToken, ^{
         _defaultReachabilty = [TOReachability reachabilityForInternetConnection];
-        _defaultReachabilty.isSingleton = YES;
         _defaultReachabilty.broadcastsNotifications = YES;
     });
     return _defaultReachabilty;
@@ -104,13 +98,14 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     if (self = [super init]) {
         _lock = OS_UNFAIR_LOCK_INIT;
         _reachabilityRef = reachabilityRef;
-        CFRetain(_reachabilityRef);
+        _running = NO;
+        _status = TOReachabilityStatusNotAvailable;;
     }
     return self;
 }
 
 - (void)dealloc {
-    [self stop];
+    [self stopListening];
     [_listeners removeAllObjects];
     if (_reachabilityRef != NULL) {
         CFRelease(_reachabilityRef);
@@ -130,30 +125,13 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     [_listeners removeObject:listener];
 }
 
-- (void)_broadcastStatusChangeFromStatus:(TOReachabilityStatus)fromStatus {
-    // Update the delegate with the status change
-    [_delegate reachability:self didChangeStatusTo:_status];
-
-    // Update any available listeners with the status change
-    for (id<TOReachabilityDelegate> listener in _listeners) {
-        [listener reachability:self didChangeStatusTo:_status];
-    }
-
-    // Call the block if one is available
-    if (_statusChangedHandler) {
-        _statusChangedHandler(self, _status, fromStatus);
-    }
-
-    // Since an app could potentially have many reachability objects active at once, only broadcast when
-    // the object has been explicitly configured to do so
-    if (_broadcastsNotifications) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:TOReachabilityStatusChangedNotification object:self];
-    }
-}
-
 #pragma mark - Reachability Lifecycle -
 
-- (BOOL)start {
+- (BOOL)startListening {
+    return [self startListeningOnQueue:dispatch_get_main_queue()];
+}
+
+- (BOOL)startListeningOnQueue:(dispatch_queue_t)queue {
     if (_running) { return YES; }
 
     SCNetworkReachabilityContext context = {
@@ -175,13 +153,12 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     _running = YES;
 
     // For the initial start, check the current network state and broadcast that
-    _status = [self _fetchNewStatusWithFlags:0];
-    [self _broadcastStatusChangeFromStatus:TOReachabilityStatusNotAvailable];
+    _status = TOReachabilityStatusNotAvailable;
 
     return result;
 }
 
-- (void)stop {
+- (void)stopListening {
     if (!_running) { return; }
     SCNetworkReachabilityUnscheduleFromRunLoop(_reachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     _running = NO;
@@ -189,7 +166,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 #pragma mark - Reachability State Tracking -
 
-- (TOReachabilityStatus)_reachabilityStatusForFlags:(SCNetworkReachabilityFlags)flags {
+- (TOReachabilityStatus)_reachabilityStatusForFlags:(SCNetworkReachabilityFlags)flags TO_REACHABILITY_OBJC_DIRECT {
     // Parse the current flags to determine our current connectivity state
     // This is the same logic from Apple's Reachability example, but derived from Alamofire's
     // reachability manager object which condenses it down to a much more succinct check.
@@ -217,25 +194,34 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return isWWAN ? TOReachabilityStatusAvailableOnCellular : TOReachabilityStatusAvailable;
 }
 
-- (TOReachabilityStatus)_fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags {
-    NSAssert(_reachabilityRef != NULL, @"currentNetworkStatus called with NULL SCNetworkReachabilityRef");
-
-    TOReachabilityStatus status = TOReachabilityStatusNotAvailable;
+- (void)_flagsDidChange:(SCNetworkReachabilityFlags)flags TO_REACHABILITY_OBJC_DIRECT {
+    NSAssert(_reachabilityRef != NULL, @"flags change called with NULL SCNetworkReachabilityRef");
 
     // If provided flags were 0, try and refresh them
     if (flags == 0) {
         SCNetworkReachabilityGetFlags(_reachabilityRef, &flags);
     }
 
-    // Convert the provided flags into a practical status value
-    status = [self _reachabilityStatusForFlags:flags];
+    TOReachabilityStatus fromStatus = _status;
+    _status = [self _reachabilityStatusForFlags:flags];
 
-    // Override cellular to "Unavailable" when only a non-cellular connection is required.
-    if (status == TOReachabilityStatusAvailableOnCellular && _requiresLocalNetworkConnection) {
-        status = TOReachabilityStatusNotAvailable;
+    // Update the delegate with the status change
+    [_delegate reachability:self didChangeStatusTo:_status fromStatus:fromStatus];
+
+    // Update any available listeners with the status change
+    for (id<TOReachabilityDelegate> listener in _listeners) {
+        [listener reachability:self didChangeStatusTo:_status fromStatus:fromStatus];
     }
 
-    return status;
+    // Call the block if one is available
+    if (_statusChangedHandler) {
+        _statusChangedHandler(self, _status, fromStatus);
+    }
+
+    // Broadcast a notification if configured to do so
+    if (_broadcastsNotifications) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:TOReachabilityStatusChangedNotification object:self];
+    }
 }
 
 #pragma mark - Public Accessors -
@@ -244,8 +230,9 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return _listeners.allObjects;
 }
 
-- (BOOL)hasInternetConnection {
-    return _status == TOReachabilityStatusAvailable || _status == TOReachabilityStatusAvailableOnCellular;
+- (BOOL)reachable {
+    return (_status == TOReachabilityStatusAvailable ||
+            _status == TOReachabilityStatusAvailableOnCellular);
 }
 
 - (BOOL)hasLocalNetworkConnection {
@@ -254,6 +241,15 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 - (BOOL)hasCellularConnection {
     return _status == TOReachabilityStatusAvailableOnCellular;
+}
+
+#pragma mark - Thread Safety -
+
+- (void)_performWithLock:(void (^)(__weak TOReachability *weakSelf))block TO_REACHABILITY_OBJC_DIRECT {
+    os_unfair_lock_lock(&_lock);
+    __weak __typeof(self) weakSelf = self;
+    block(weakSelf);
+    os_unfair_lock_unlock(&_lock);
 }
 
 #pragma mark - Internal Testing -

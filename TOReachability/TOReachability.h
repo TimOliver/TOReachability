@@ -1,7 +1,7 @@
 //
 //  TOReachability.h
 //
-//  Copyright 2019-2023 Timothy Oliver. All rights reserved.
+//  Copyright 2019-2024 Timothy Oliver. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to
@@ -46,7 +46,8 @@ extern NSString *TOReachabilityStatusChangedNotification NS_SWIFT_NAME(Reachabil
 ///   - reachability: The reachability object that detected the change.
 ///   - newStatus: The new netwotk status that the device changed to.
 - (void)reachability:(TOReachability *)reachability
-   didChangeStatusTo:(TOReachabilityStatus)newStatus NS_SWIFT_NAME(reachability(_:didChangeTo:));
+   didChangeStatusTo:(TOReachabilityStatus)status
+          fromStatus:(TOReachabilityStatus)fromStatus NS_SWIFT_NAME(reachability(_:didChangeTo:from:));
 
 @end
 
@@ -60,7 +61,7 @@ NS_SWIFT_NAME(Reachability)
 @property (nonatomic, readonly) TOReachabilityStatus status;
 
 /// A convenience property for checking there is an active internet connection (regardless of cellular or local connectivity)
-@property (nonatomic, readonly) BOOL hasInternetConnection;
+@property (nonatomic, readonly) BOOL reachable NS_SWIFT_NAME(isReachable);
 
 /// A convenience property for checking there is an active local connection (ie, only a WiFi or Ethernet connection)
 @property (nonatomic, readonly) BOOL hasLocalNetworkConnection;
@@ -106,11 +107,14 @@ NS_SWIFT_NAME(Reachability)
 /// Removes an object from being a listener of reachability changes.
 - (void)removeListener:(id<TOReachabilityDelegate>)listener;
 
-/// Start watching for reachability changes.
-- (BOOL)start;
+/// Start listening for reachability changes on the main queue.
+- (BOOL)startListening;
 
-/// Stop watching for reachability changes.
-- (void)stop;
+/// Start listening for reachability changes on the specified dispatch queue.
+- (BOOL)startListeningOnQueue:(dispatch_queue_t)queue;
+
+/// Stop listening for reachability changes.
+- (void)stopListening;
 
 @end
 
