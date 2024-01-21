@@ -23,6 +23,7 @@
 #import <arpa/inet.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <CoreFoundation/CoreFoundation.h>
+#import <os/lock.h>
 
 #import "TOReachability.h"
 
@@ -38,6 +39,7 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 @property (nonatomic, assign, readwrite) TOReachabilityStatus status;
 @property (nonatomic, assign, readwrite) SCNetworkReachabilityRef reachabilityRef;
 @property (nonatomic, assign, readwrite) BOOL isSingleton;
+@property (nonatomic, assign, readwrite) os_unfair_lock lock;
 
 - (TOReachabilityStatus)_fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags;
 - (void)_broadcastStatusChangeFromStatus:(TOReachabilityStatus)fromStatus;
@@ -83,8 +85,8 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
                                                                                       (const struct sockaddr *)&zeroAddress);
     if (reachabilityRef == NULL) { return nil; }
 
-    TOReachability *reachability = [[TOReachability alloc] init];
-    reachability.reachabilityRef = reachabilityRef;
+    TOReachability *reachability = [[TOReachability alloc] initWithReachabilityRef:reachabilityRef];
+    CFRelease(reachabilityRef);
     return reachability;
 }
 
@@ -93,9 +95,18 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     SCNetworkReachabilityRef reachabilityRef = SCNetworkReachabilityCreateWithName(NULL, hostName.UTF8String);
     if (reachabilityRef == NULL) { return nil; }
 
-    TOReachability *reachability = [[TOReachability alloc] init];
-    reachability.reachabilityRef = reachabilityRef;
+    TOReachability *reachability = [[TOReachability alloc] initWithReachabilityRef:reachabilityRef];
+    CFRelease(reachabilityRef);
     return reachability;
+}
+
+- (instancetype)initWithReachabilityRef:(SCNetworkReachabilityRef)reachabilityRef {
+    if (self = [super init]) {
+        _lock = OS_UNFAIR_LOCK_INIT;
+        _reachabilityRef = reachabilityRef;
+        CFRetain(_reachabilityRef);
+    }
+    return self;
 }
 
 - (void)dealloc {
@@ -182,6 +193,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     // Parse the current flags to determine our current connectivity state
     // This is the same logic from Apple's Reachability example, but derived from Alamofire's
     // reachability manager object which condenses it down to a much more succinct check.
+    // https://github.com/Alamofire/Alamofire/blob/master/Source/NetworkReachabilityManager.swift
     const BOOL isReachable = (flags & kSCNetworkReachabilityFlagsReachable) != 0;
     const BOOL isConnectionRequired = (flags & kSCNetworkReachabilityFlagsConnectionRequired) != 0;
     const BOOL canConnectAutomatically = (flags & kSCNetworkReachabilityFlagsConnectionOnDemand) != 0 ||
