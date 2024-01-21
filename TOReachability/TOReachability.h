@@ -24,9 +24,12 @@
 
 /// The current status of the device's reachability
 typedef NS_ENUM(NSInteger, TOReachabilityStatus) {
-    TOReachabilityStatusNotAvailable = 0,   /// There is presently no network connection.
-    TOReachabilityStatusAvailable,          /// The device is online and connected to a network, either through WiFi or Ethernet.
-    TOReachabilityStatusAvailableOnCellular /// The device is connected to a cellular service, but not WiFi or Ethernet.
+    /// There is presently no network connection.
+    TOReachabilityStatusNotAvailable = 0,
+    /// The device is connected to a cellular service, but not WiFi or Ethernet.
+    TOReachabilityStatusAvailableOnCellular,
+    /// The device is online and connected to a network, regardless of WiFi, Ethernet or cellular.
+    TOReachabilityStatusAvailable
 } NS_SWIFT_NAME(Reachability.Status);
 
 NS_ASSUME_NONNULL_BEGIN
@@ -50,10 +53,10 @@ extern NSString *TOReachabilityStatusChangedNotification NS_SWIFT_NAME(Reachabil
 NS_SWIFT_NAME(Reachability)
 @interface TOReachability : NSObject
 
-/// Indiciates that the reachability object has been started and is currently running.
+/// Indicates that the reachability object has been started and is currently running.
 @property (nonatomic, readonly) BOOL running NS_SWIFT_NAME(isRunning);
 
-/// The current network reachability status of the device, whether offline, online, or online with cellular.
+/// The current network reachability status of the device, whether offline, online, or online only with cellular.
 @property (nonatomic, readonly) TOReachabilityStatus status;
 
 /// A convenience property for checking there is an active internet connection (regardless of cellular or local connectivity)
@@ -69,7 +72,9 @@ NS_SWIFT_NAME(Reachability)
 @property (nonatomic, weak) id<TOReachabilityDelegate> delegate;
 
 /// As an alternative to the delegate, a block that will be called whenever the reachability status changes.
-@property (nonatomic, copy, nullable) void (^statusChangedHandler)(TOReachabilityStatus newStatus);
+@property (nonatomic, copy, nullable) void (^statusChangedHandler)(TOReachability *reachability, 
+                                                                   TOReachabilityStatus newStatus,
+                                                                   TOReachabilityStatus oldStatus);
 
 /// An array of all of the listener objects currently subscribed to this reachability object.
 @property (nonatomic, readonly) NSArray<id<TOReachabilityDelegate>> *listeners;

@@ -40,7 +40,7 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 @property (nonatomic, assign, readwrite) BOOL wifiOnly;
 
 - (TOReachabilityStatus)_fetchNewStatusWithFlags:(SCNetworkReachabilityFlags)flags;
-- (void)_broadcastStatusChange;
+- (void)_broadcastStatusChangeFromStatus:(TOReachabilityStatus)fromStatus;
 
 @end
 
@@ -48,8 +48,9 @@ NSString *TOReachabilityStatusChangedNotification = @"TOReachabilityStatusChange
 
 static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReachabilityFlags flags, void *info) {
     TOReachability *reachability = (__bridge TOReachability *)info;
+    const TOReachabilityStatus fromStatus = reachability.status;
     reachability.status = [reachability _fetchNewStatusWithFlags:flags];
-    [reachability _broadcastStatusChange];
+    [reachability _broadcastStatusChangeFromStatus:fromStatus];
 }
 
 // -------------------------------------------------------------
@@ -114,7 +115,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     [_listeners removeObject:listener];
 }
 
-- (void)_broadcastStatusChange {
+- (void)_broadcastStatusChangeFromStatus:(TOReachabilityStatus)fromStatus {
     // Update the delegate with the status change
     [_delegate reachability:self didChangeStatusTo:_status];
 
@@ -125,7 +126,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
     // Call the block if one is available
     if (_statusChangedHandler) {
-        _statusChangedHandler(_status);
+        _statusChangedHandler(self, _status, fromStatus);
     }
 
     // Since an app could potentially have many reachability objects active at once, only broadcast when
@@ -160,7 +161,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
     // For the initial start, check the current network state and broadcast that
     _status = [self _fetchNewStatusWithFlags:0];
-    [self _broadcastStatusChange];
+    [self _broadcastStatusChangeFromStatus:TOReachabilityStatusNotAvailable];
 
     return result;
 }
