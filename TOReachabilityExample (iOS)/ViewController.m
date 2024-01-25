@@ -114,7 +114,7 @@
 
     switch (indexPath.row) {
         case 0:
-            highlighted = (self.reachability.status == TOReachabilityStatusAvailable);
+            highlighted = (self.reachability.status == TOReachabilityStatusAvailableOnLocalNetwork);
 #if (TARGET_OS_MACCATALYST || TARGET_OS_TV)
             cell.titleLabel.text = @"Online";
 #else
@@ -171,7 +171,7 @@
 
             BOOL highlighted = NO;
             switch (i) {
-                case 0: highlighted = (self.reachability.status == TOReachabilityStatusAvailable); break;
+                case 0: highlighted = (self.reachability.status == TOReachabilityStatusAvailableOnLocalNetwork); break;
                 case 1: highlighted = (self.reachability.status == TOReachabilityStatusAvailableOnCellular); break;
                 case 2: highlighted = (self.reachability.status == TOReachabilityStatusNotAvailable); break;
             }

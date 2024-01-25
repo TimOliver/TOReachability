@@ -28,8 +28,8 @@ typedef NS_ENUM(NSInteger, TOReachabilityStatus) {
     TOReachabilityStatusNotAvailable = 0,
     /// The device is connected to a cellular service, but not WiFi or Ethernet.
     TOReachabilityStatusAvailableOnCellular,
-    /// The device is online and connected to a network, regardless of WiFi, Ethernet or cellular.
-    TOReachabilityStatusAvailable
+    /// The device is online and connected to a network through WiFi or Ethernet.
+    TOReachabilityStatusAvailableOnLocalNetwork
 } NS_SWIFT_NAME(Reachability.Status);
 
 NS_ASSUME_NONNULL_BEGIN
@@ -54,10 +54,10 @@ extern NSString *TOReachabilityStatusChangedNotification NS_SWIFT_NAME(Reachabil
 NS_SWIFT_NAME(Reachability)
 @interface TOReachability : NSObject
 
-/// Indicates that the reachability object has been started and is currently running.
+/// Indicates that the reachability object has been started and is currently listening for events.
 @property (nonatomic, readonly) BOOL running NS_SWIFT_NAME(isRunning);
 
-/// The current network reachability status of the device, whether offline, online, or online only with cellular.
+/// The current network reachability status of the device, whether offline, online with WiFi, or online only with cellular.
 @property (nonatomic, readonly) TOReachabilityStatus status;
 
 /// A convenience property for checking there is an active internet connection (regardless of cellular or local connectivity)
@@ -94,7 +94,7 @@ NS_SWIFT_NAME(Reachability)
 
 /// Creates a new reachability object configured to detect whenever an active internet connection is present.
 /// (Whether on a cellular service, or on a local WiFi network)
-- (nullable instancetype)init;
+- (instancetype)init;
 
 /// Creates a new reachability object configured to detect that there is an active internet connection to an online host name.
 /// - Parameter hostName: The host name to target (must not include the scheme, eg 'https')

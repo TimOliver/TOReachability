@@ -70,7 +70,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return _sharedReachabilty;
 }
 
-- (nullable instancetype)init {
+- (instancetype)init {
     struct sockaddr_in zeroAddress;
     bzero(&zeroAddress, sizeof(zeroAddress));
     zeroAddress.sin_len = sizeof(zeroAddress);
@@ -192,7 +192,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
                                                     (flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0;
     const BOOL isActuallyReachable = isReachable && (!isConnectionRequired || canConnectWithoutUserInteraction);
 
-    // Only bother with the WWAN check on devices with embedded celluar modems (ie iPhone and iPad)
+    // Only perform the WWAN check on devices with embedded celluar modems (ie iPhone and iPad)
 #if (TARGET_OS_OSX || TARGET_OS_MACCATALYST || TARGET_OS_TV || TARGET_OS_VISION)
     const BOOL isWWAN = NO;
 #else
@@ -204,7 +204,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
         return TOReachabilityStatusNotAvailable;
     }
 
-    return isWWAN ? TOReachabilityStatusAvailableOnCellular : TOReachabilityStatusAvailable;
+    return isWWAN ? TOReachabilityStatusAvailableOnCellular : TOReachabilityStatusAvailableOnLocalNetwork;
 }
 
 - (void)_flagsDidChange:(SCNetworkReachabilityFlags)flags TO_REACHABILITY_OBJC_DIRECT {
@@ -244,7 +244,11 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 #pragma mark - Public Accessors -
 
 - (NSArray<id<TOReachabilityDelegate>> *)listeners {
-    return _listeners.allObjects;
+    __block NSArray *listeners = nil;
+    [self _performWithLock:^(TOReachability *strongSelf) {
+        listeners = strongSelf->_listeners.allObjects;
+    }];
+    return listeners;
 }
 
 - (TOReachabilityStatus)status {
@@ -257,13 +261,13 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 - (BOOL)reachable {
     const TOReachabilityStatus status = self.status;
-    return (status == TOReachabilityStatusAvailable ||
+    return (status == TOReachabilityStatusAvailableOnLocalNetwork ||
             status == TOReachabilityStatusAvailableOnCellular);
 }
 
 - (BOOL)reachableOnLocalNetwork {
     const TOReachabilityStatus status = self.status;
-    return status == TOReachabilityStatusAvailable;
+    return status == TOReachabilityStatusAvailableOnLocalNetwork;
 }
 
 - (BOOL)reachableOnCellular {
