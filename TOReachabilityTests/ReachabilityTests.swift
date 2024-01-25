@@ -9,17 +9,11 @@
 import XCTest
 @testable import TOReachability
 
-enum ReachabilityError: Error, Equatable {
-    case objectWasNil
-}
-
 class ReachabilityTests: XCTestCase {
 
     func testSwiftSetupAndRun() throws {
         let expectation = XCTestExpectation(description: "Set up and run")
-        guard let reachability = Reachability() else {
-            throw ReachabilityError.objectWasNil
-        }
+        let reachability = Reachability()
 
         reachability.statusChangedHandler = { _, _, _ in
             expectation.fulfill()
@@ -32,9 +26,7 @@ class ReachabilityTests: XCTestCase {
     }
 
     func testNotificationBroadcast() throws {
-        guard let reachability = Reachability() else {
-            throw ReachabilityError.objectWasNil
-        }
+        let reachability = Reachability()
 
         reachability.broadcastsNotifications = true
         XCTAssertNotNil(reachability)
