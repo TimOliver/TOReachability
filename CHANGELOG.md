@@ -10,6 +10,12 @@ x.y.z Release Notes (yyyy-MM-dd)
 ### Compatibility
 * None.
 
+2.0.0 Release Notes (2024-01-17)
+=============================================================
+
+### Enhancements
+* Complete internal overhaul to be more modern and reliable.
+
 1.2.0 Release Notes (2023-05-14)
 =============================================================
 
