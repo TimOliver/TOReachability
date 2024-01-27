@@ -133,12 +133,12 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
 
 #pragma mark - Reachability Lifecycle -
 
-- (BOOL)startListening {
-    return [self startListeningOnQueue:dispatch_get_main_queue()];
+- (BOOL)start {
+    return [self startOnQueue:dispatch_get_main_queue()];
 }
 
-- (BOOL)startListeningOnQueue:(dispatch_queue_t)queue {
-    [self stopListening];
+- (BOOL)startOnQueue:(dispatch_queue_t)queue {
+    [self stop];
 
     SCNetworkReachabilityContext context = {
         0, (__bridge void *)(self), NULL, NULL, NULL
@@ -167,7 +167,7 @@ static void TOReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return YES;
 }
 
-- (void)stopListening {
+- (void)stop {
     SCNetworkReachabilitySetCallback(_reachabilityRef, NULL, NULL);
     SCNetworkReachabilitySetDispatchQueue(_reachabilityRef, NULL);
     [self _performWithLock:^(TOReachability *strongSelf) {

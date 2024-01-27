@@ -9,6 +9,7 @@
 import XCTest
 @testable import TOReachability
 
+
 class ReachabilityTests: XCTestCase {
 
     func testSwiftSetupAndRun() throws {
@@ -18,7 +19,7 @@ class ReachabilityTests: XCTestCase {
         reachability.statusChangedHandler = { _, _, _ in
             expectation.fulfill()
         }
-        reachability.startListening()
+        reachability.start()
 
         wait(for: [expectation], timeout: 1.0)
 
@@ -32,7 +33,7 @@ class ReachabilityTests: XCTestCase {
         XCTAssertNotNil(reachability)
 
         let expectation = XCTNSNotificationExpectation(name: NSNotification.Name(rawValue: Reachability.StatusChangedNotification), object: reachability)
-        reachability.startListening()
+        reachability.start()
 
         wait(for: [expectation], timeout: 1.0)
     }

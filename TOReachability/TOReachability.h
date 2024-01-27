@@ -108,13 +108,13 @@ NS_SWIFT_NAME(Reachability)
 - (void)removeListener:(id<TOReachabilityDelegate>)listener;
 
 /// Start listening for reachability changes on the main queue.
-- (BOOL)startListening;
+- (BOOL)start;
 
 /// Start listening for reachability changes on the specified dispatch queue.
-- (BOOL)startListeningOnQueue:(dispatch_queue_t)queue;
+- (BOOL)startOnQueue:(dispatch_queue_t)queue;
 
 /// Stop listening for reachability changes.
-- (void)stopListening;
+- (void)stop;
 
 @end
 

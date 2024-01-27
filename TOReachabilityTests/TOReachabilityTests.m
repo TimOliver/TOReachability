@@ -39,7 +39,7 @@
                                           TOReachabilityStatus oldStatus) {
         [expection fulfill];
     };
-    [reachability startListening];
+    [reachability start];
 
     [self waitForExpectations:@[expection] timeout:1.0f];
 
@@ -54,7 +54,7 @@
     XCTAssertNotNil(reachability);
 
     XCTNSNotificationExpectation *expectation = [[XCTNSNotificationExpectation alloc] initWithName:TOReachabilityStatusChangedNotification object:reachability];
-    [reachability startListening];
+    [reachability start];
 
     [self waitForExpectations:@[expectation] timeout:1.0f];
 }
@@ -71,7 +71,7 @@
                                           TOReachabilityStatus oldStatus) {
         [expection fulfill];
     };
-    [reachability startListening];
+    [reachability start];
 
     // Force trigger the internal callback method, simulating cellular
     [reachability _triggerCallbackWithCellular:YES wifi:NO];
@@ -95,7 +95,7 @@
             [expection fulfill];
         }
     };
-    [reachability startListening];
+    [reachability start];
 
     // Force trigger the internal callback method, simulating cellular
     [reachability _triggerCallbackWithCellular:YES wifi:NO];
@@ -118,7 +118,7 @@
             [expection fulfill];
         }
     };
-    [reachability startListening];
+    [reachability start];
 
     // Force trigger the internal callback method, simulating cellular
     [reachability _triggerCallbackWithCellular:YES wifi:NO];
@@ -150,7 +150,7 @@
     self.delegateExpectation = [[XCTestExpectation alloc] initWithDescription:@"Delegate successfully called"];
 
     reachability.delegate = self;
-    [reachability startListening];
+    [reachability start];
 
     [self waitForExpectations:@[self.delegateExpectation] timeout:1.0f];
 }
@@ -173,7 +173,7 @@
     [reachability addListener:self];
     XCTAssertEqual(reachability.listeners.count, 1);
 
-    [reachability startListening];
+    [reachability start];
 
     [self waitForExpectations:@[self.delegateExpectation] timeout:1.0f];
 }

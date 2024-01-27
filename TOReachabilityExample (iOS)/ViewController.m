@@ -29,7 +29,7 @@
                                                TOReachabilityStatus oldStatus) {
         [weakSelf _updateCellsAnimated:YES];
     };
-    [self.reachability startListening];
+    [self.reachability start];
 }
 
 - (void)viewDidLayoutSubviews {
