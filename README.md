@@ -55,9 +55,11 @@ While `TOReachability` only currently includes the most basic of functionality, 
 ### Objective-C
 
 ```objc
-TOReachability *reachability = [TOReachability reachabilityForInternetConnection];
+TOReachability *reachability = [[TOReachability alloc] init];
 
-reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
+reachability.statusChangedHandler = ^(TOReachability *reachability,
+					TOReachabilityStatus newStatus,
+					TOReachabilityStatus oldStatus) {
         NSLog(@"Network Status Changed!");
 };
 
@@ -67,9 +69,9 @@ reachability.statusChangedHandler = ^(TOReachabilityStatus newStatus) {
 ### Swift
 
 ```swift
-let reachability = Reachability.forInternetConnection()
+let reachability = Reachability()
 
-reachability.statusChangedHandler = { newStatus in
+reachability.statusChangedHandler = { reachability, newStatus, oldStatus in
     print("Network Status Changed!")
 }
 
